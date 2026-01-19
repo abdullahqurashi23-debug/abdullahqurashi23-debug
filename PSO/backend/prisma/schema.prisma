@@ -1,0 +1,431 @@
+// PSO Pakistan Pump Management System - Database Schema
+// Enterprise-grade real-time fuel station management
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+// ============= ENUMS =============
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+}
+
+enum ShiftType {
+  MORNING
+  EVENING
+  NIGHT
+}
+
+enum ShiftStatus {
+  ACTIVE
+  CLOSED
+}
+
+enum FuelType {
+  PETROL
+  DIESEL
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  CREDIT
+  EASYPAISA
+  JAZZCASH
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DeliveryPaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+}
+
+enum AlertType {
+  LOW_FUEL
+  CASH_VARIANCE
+  CREDIT_OVERDUE
+  LOAN_DUE
+  SYSTEM
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// ============= USER MANAGEMENT =============
+
+model User {
+  id            String     @id @default(uuid())
+  username      String     @unique
+  passwordHash  String     @map("password_hash")
+  fullName      String     @map("full_name")
+  role          UserRole
+  phone         String?
+  cnic          String?    @unique // Pakistani CNIC
+  status        UserStatus @default(PENDING)
+  profileImage  String?    @map("profile_image")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  createdById   String?    @map("created_by_id")
+  lastLogin     DateTime?  @map("last_login")
+
+  // Relations
+  createdBy          User?           @relation("CreatedByUser", fields: [createdById], references: [id])
+  createdUsers       User[]          @relation("CreatedByUser")
+  shifts             Shift[]
+  sales              Sale[]
+  approvedSales      Sale[]          @relation("ApprovedSales")
+  fuelDeliveries     FuelDelivery[]
+  bankingTransactions BankingTransaction[]
+  expenses           Expense[]       @relation("CreatedExpenses")
+  approvedExpenses   Expense[]       @relation("ApprovedExpenses")
+  creditPayments     CreditPayment[]
+  auditLogs          AuditLog[]
+  settingsUpdated    Setting[]
+  sentMessages       Message[]       @relation("SentMessages")
+  receivedMessages   Message[]       @relation("ReceivedMessages")
+
+  @@map("users")
+}
+
+// ============= SHIFT MANAGEMENT =============
+
+model Shift {
+  id                   String      @id @default(uuid())
+  operatorId           String      @map("operator_id")
+  shiftType            ShiftType   @map("shift_type")
+  startTime            DateTime    @map("start_time")
+  endTime              DateTime?   @map("end_time")
+  status               ShiftStatus @default(ACTIVE)
+
+  // Cash tracking
+  openingCash          Decimal     @default(0) @map("opening_cash") @db.Decimal(12, 2)
+  closingCash          Decimal?    @map("closing_cash") @db.Decimal(12, 2)
+
+  // Tank readings
+  openingPetrolLevel   Decimal     @map("opening_petrol_level") @db.Decimal(10, 2)
+  openingDieselLevel   Decimal     @map("opening_diesel_level") @db.Decimal(10, 2)
+  closingPetrolLevel   Decimal?    @map("closing_petrol_level") @db.Decimal(10, 2)
+  closingDieselLevel   Decimal?    @map("closing_diesel_level") @db.Decimal(10, 2)
+
+  // Summary (auto-calculated)
+  totalSales           Decimal     @default(0) @map("total_sales") @db.Decimal(12, 2)
+  totalLiters          Decimal     @default(0) @map("total_liters") @db.Decimal(10, 2)
+  cashCollected        Decimal     @default(0) @map("cash_collected") @db.Decimal(12, 2)
+  cardPayments         Decimal     @default(0) @map("card_payments") @db.Decimal(12, 2)
+  creditSales          Decimal     @default(0) @map("credit_sales") @db.Decimal(12, 2)
+
+  // Variance
+  cashVariance         Decimal?    @map("cash_variance") @db.Decimal(10, 2)
+  fuelVariance         Decimal?    @map("fuel_variance") @db.Decimal(10, 2)
+
+  notes                String?
+
+  // Relations
+  operator             User        @relation(fields: [operatorId], references: [id])
+  sales                Sale[]
+  bankingTransactions  BankingTransaction[]
+
+  @@index([operatorId])
+  @@index([startTime])
+  @@map("shifts")
+}
+
+// ============= FUEL TANKS =============
+
+model FuelTank {
+  id              String    @id @default(uuid())
+  fuelType        FuelType  @unique @map("fuel_type")
+  capacity        Decimal   @db.Decimal(10, 2) // in liters
+  currentLevel    Decimal   @map("current_level") @db.Decimal(10, 2)
+  minThreshold    Decimal   @default(500) @map("min_threshold") @db.Decimal(10, 2)
+  lastUpdated     DateTime  @default(now()) @map("last_updated")
+  lastRefillDate  DateTime? @map("last_refill_date")
+  sensorConnected Boolean   @default(false) @map("sensor_connected")
+
+  @@map("fuel_tanks")
+}
+
+// ============= SALES =============
+
+model Sale {
+  id              String        @id @default(uuid())
+  saleNumber      Int           @unique @default(autoincrement()) @map("sale_number")
+  operatorId      String        @map("operator_id")
+  shiftId         String        @map("shift_id")
+
+  // Fuel details
+  fuelType        FuelType      @map("fuel_type")
+  liters          Decimal       @db.Decimal(10, 2)
+  pricePerLiter   Decimal       @map("price_per_liter") @db.Decimal(8, 2)
+  totalAmount     Decimal       @map("total_amount") @db.Decimal(12, 2)
+
+  // Payment
+  paymentMethod   PaymentMethod @map("payment_method")
+  paymentStatus   PaymentStatus @default(PAID) @map("payment_status")
+
+  // Customer info (optional)
+  vehicleNumber   String?       @map("vehicle_number")
+  customerName    String?       @map("customer_name")
+  customerPhone   String?       @map("customer_phone")
+
+  // Credit sale details
+  creditApprovedById String?    @map("credit_approved_by")
+  creditDueDate   DateTime?     @map("credit_due_date")
+  creditPaid      Boolean       @default(false) @map("credit_paid")
+  creditCustomerId String?      @map("credit_customer_id")
+
+  // Timestamps
+  saleDate        DateTime      @default(now()) @map("sale_date")
+  notes           String?
+
+  // Relations
+  operator        User          @relation(fields: [operatorId], references: [id])
+  shift           Shift         @relation(fields: [shiftId], references: [id])
+  creditApprovedBy User?        @relation("ApprovedSales", fields: [creditApprovedById], references: [id])
+  creditCustomer  CreditCustomer? @relation(fields: [creditCustomerId], references: [id])
+
+  @@index([operatorId])
+  @@index([shiftId])
+  @@index([saleDate])
+  @@index([fuelType])
+  @@map("sales")
+}
+
+// ============= FUEL DELIVERIES =============
+
+model FuelDelivery {
+  id                String                @id @default(uuid())
+  supplierName      String                @map("supplier_name")
+  deliveryDate      DateTime              @default(now()) @map("delivery_date")
+
+  fuelType          FuelType              @map("fuel_type")
+  quantityLiters    Decimal               @map("quantity_liters") @db.Decimal(10, 2)
+  pricePerLiter     Decimal               @map("price_per_liter") @db.Decimal(8, 2)
+  totalCost         Decimal               @map("total_cost") @db.Decimal(12, 2)
+
+  // Invoice details
+  invoiceNumber     String?               @map("invoice_number")
+  invoiceDate       DateTime?             @map("invoice_date")
+
+  // Payment
+  paymentStatus     DeliveryPaymentStatus @default(PENDING) @map("payment_status")
+  paidAmount        Decimal               @default(0) @map("paid_amount") @db.Decimal(12, 2)
+  paymentDueDate    DateTime?             @map("payment_due_date")
+
+  // Tank reading before & after
+  tankLevelBefore   Decimal               @map("tank_level_before") @db.Decimal(10, 2)
+  tankLevelAfter    Decimal               @map("tank_level_after") @db.Decimal(10, 2)
+
+  // Quality check
+  density           Decimal?              @db.Decimal(5, 3)
+  temperature       Decimal?              @db.Decimal(4, 1)
+
+  receivedById      String                @map("received_by_id")
+  notes             String?
+
+  // Relations
+  receivedBy        User                  @relation(fields: [receivedById], references: [id])
+  bankingTransactions BankingTransaction[]
+
+  @@index([fuelType])
+  @@index([deliveryDate])
+  @@map("fuel_deliveries")
+}
+
+// ============= BANKING =============
+
+model BankingTransaction {
+  id                String    @id @default(uuid())
+  transactionDate   DateTime  @default(now()) @map("transaction_date")
+  transactionType   String    @map("transaction_type") // deposit, withdrawal, expense, loan_payment, supplier_payment
+  amount            Decimal   @db.Decimal(12, 2)
+
+  // Bank details
+  bankName          String?   @map("bank_name")
+  accountNumber     String?   @map("account_number")
+
+  // Reference
+  referenceNumber   String?   @map("reference_number")
+  description       String?
+
+  // Links
+  shiftId           String?   @map("shift_id")
+  deliveryId        String?   @map("delivery_id")
+  createdById       String    @map("created_by_id")
+
+  // Receipt image
+  receiptImage      String?   @map("receipt_image")
+
+  // Relations
+  shift             Shift?    @relation(fields: [shiftId], references: [id])
+  delivery          FuelDelivery? @relation(fields: [deliveryId], references: [id])
+  createdBy         User      @relation(fields: [createdById], references: [id])
+
+  @@index([transactionType])
+  @@index([transactionDate])
+  @@map("banking_transactions")
+}
+
+// ============= CREDIT CUSTOMERS =============
+
+model CreditCustomer {
+  id                String    @id @default(uuid())
+  customerName      String    @map("customer_name")
+  phone             String?
+  cnic              String?
+  address           String?
+  companyName       String?   @map("company_name")
+
+  creditLimit       Decimal   @default(10000) @map("credit_limit") @db.Decimal(12, 2)
+  totalOutstanding  Decimal   @default(0) @map("total_outstanding") @db.Decimal(12, 2)
+  status            String    @default("active") // active, blocked
+
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  sales             Sale[]
+  payments          CreditPayment[]
+
+  @@index([phone])
+  @@map("credit_customers")
+}
+
+model CreditPayment {
+  id                String    @id @default(uuid())
+  customerId        String    @map("customer_id")
+  paymentDate       DateTime  @default(now()) @map("payment_date")
+  amount            Decimal   @db.Decimal(12, 2)
+  paymentMethod     String    @map("payment_method") // cash, bank_transfer, cheque
+  referenceNumber   String?   @map("reference_number")
+  notes             String?
+  receivedById      String    @map("received_by_id")
+
+  // Relations
+  customer          CreditCustomer @relation(fields: [customerId], references: [id])
+  receivedBy        User      @relation(fields: [receivedById], references: [id])
+
+  @@map("credit_payments")
+}
+
+// ============= EXPENSES =============
+
+model Expense {
+  id              String    @id @default(uuid())
+  expenseDate     DateTime  @default(now()) @map("expense_date")
+  category        String    // electricity, water, salary, maintenance, rent, taxes, other
+  amount          Decimal   @db.Decimal(12, 2)
+  description     String
+
+  // Receipt
+  receiptNumber   String?   @map("receipt_number")
+  receiptImage    String?   @map("receipt_image")
+
+  approvedById    String?   @map("approved_by_id")
+  createdById     String    @map("created_by_id")
+
+  // Relations
+  approvedBy      User?     @relation("ApprovedExpenses", fields: [approvedById], references: [id])
+  createdBy       User      @relation("CreatedExpenses", fields: [createdById], references: [id])
+
+  @@index([category])
+  @@index([expenseDate])
+  @@map("expenses")
+}
+
+// ============= SYSTEM SETTINGS =============
+
+model Setting {
+  key           String    @id
+  value         String
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+  updatedById   String?   @map("updated_by_id")
+
+  // Relations
+  updatedBy     User?     @relation(fields: [updatedById], references: [id])
+
+  @@map("settings")
+}
+
+// ============= ALERTS =============
+
+model Alert {
+  id            String        @id @default(uuid())
+  alertType     AlertType     @map("alert_type")
+  severity      AlertSeverity
+  message       String
+  createdAt     DateTime      @default(now()) @map("created_at")
+  readAt        DateTime?     @map("read_at")
+  resolvedAt    DateTime?     @map("resolved_at")
+  relatedId     String?       @map("related_id")
+
+  @@index([alertType])
+  @@index([severity])
+  @@map("alerts")
+}
+
+// ============= AUDIT LOGS =============
+
+model AuditLog {
+  id            String    @id @default(uuid())
+  userId        String?   @map("user_id")
+  action        String
+  tableName     String?   @map("table_name")
+  recordId      String?   @map("record_id")
+  oldValue      Json?     @map("old_value")
+  newValue      Json?     @map("new_value")
+  ipAddress     String?   @map("ip_address")
+  timestamp     DateTime  @default(now())
+
+  // Relations
+  user          User?     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+// ============= MESSAGES =============
+
+model Message {
+  id            String    @id @default(uuid())
+  content       String
+  senderId      String    @map("sender_id")
+  receiverId    String    @map("receiver_id")
+  isRead        Boolean   @default(false) @map("is_read")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  readAt        DateTime? @map("read_at")
+
+  // Relations (Using generic names to avoid circular dependency complexity, or assume implicit handling if simple relation)
+  // For simplicity and to avoid cluttering User model with "sentMessages", "receivedMessages", we can leave relations implicit or define them if needed for query.
+  // Defining relations to User:
+  sender        User      @relation("SentMessages", fields: [senderId], references: [id])
+  receiver      User      @relation("ReceivedMessages", fields: [receiverId], references: [id])
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@map("messages")
+}
