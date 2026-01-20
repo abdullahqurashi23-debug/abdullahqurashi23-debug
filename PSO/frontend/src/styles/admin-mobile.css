@@ -1,0 +1,130 @@
+/* ==========================================
+   ADMIN MOBILE THEME
+   Mobile-first design for admin dashboard
+   ========================================== */
+
+/* Mobile-specific overrides */
+@media (max-width: 1023px) {
+
+    /* Sidebar - Always hidden on mobile, shown by JS overlay */
+    .admin-sidebar-mobile-hidden {
+        left: calc(-1 * var(--sidebar-width)) !important;
+    }
+
+    /* Smaller cards on mobile */
+    .admin-card-mobile {
+        padding: 12px !important;
+    }
+
+    /* Smaller text */
+    .admin-text-2xl-mobile {
+        font-size: 1.25rem !important;
+    }
+
+    /* Compact KPI cards */
+    .admin-kpi-grid {
+        gap: 12px !important;
+    }
+
+    /* Smaller icons */
+    .admin-icon-mobile {
+        width: 20px !important;
+        height: 20px !important;
+    }
+
+    /* Compact header */
+    .admin-header-mobile {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    /* Full-width tables */
+    .admin-table-mobile {
+        overflow-x: auto !important;
+    }
+
+    /* Hide desktop-only elements */
+    .admin-hide-mobile {
+        display: none !important;
+    }
+}
+
+/* Admin Bottom Nav Styles */
+.admin-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    background: white;
+    border-top: 1px solid var(--border);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (min-width: 1024px) {
+    .admin-bottom-nav {
+        display: none;
+    }
+}
+
+.admin-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.admin-nav-item.active {
+    color: var(--color-primary);
+}
+
+.admin-nav-item svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Mobile Card Styles */
+.admin-stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 640px) {
+    .admin-stat-card {
+        padding: 12px;
+    }
+
+    .admin-stat-card h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* Compact Header for Mobile */
+@media (max-width: 640px) {
+    :root {
+        --header-height: 56px;
+    }
+}
+
+/* Safe area for bottom navigation */
+.safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile-optimized scrolling */
+.mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}

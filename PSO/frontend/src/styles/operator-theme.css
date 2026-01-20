@@ -1,0 +1,636 @@
+/* PSO Operator Web App - Mobile-First Design System */
+/* Based on comprehensive UI/UX specification */
+
+:root {
+    /* ============= PRIMARY COLORS ============= */
+    --op-primary: #0066CC;
+    /* PSO Blue */
+    --op-primary-dark: #004C99;
+    --op-primary-light: #3385D6;
+
+    --op-secondary: #00A651;
+    /* Success Green */
+    --op-secondary-dark: #008040;
+    --op-secondary-light: #33B873;
+
+    /* ============= SEMANTIC COLORS ============= */
+    --op-success: #10B981;
+    /* Approved, Complete */
+    --op-warning: #F59E0B;
+    /* Waiting, Caution */
+    --op-danger: #EF4444;
+    /* Rejected, Error */
+    --op-info: #3B82F6;
+    /* Information */
+
+    /* ============= FUEL COLORS ============= */
+    --op-petrol: #FF6B35;
+    /* Orange-red for Petrol */
+    --op-petrol-light: #FF8F66;
+    --op-diesel: #4ECDC4;
+    /* Teal-green for Diesel */
+    --op-diesel-light: #7EDAD4;
+
+    /* ============= NEUTRAL COLORS ============= */
+    --op-gray-50: #F8FAFC;
+    --op-gray-100: #F1F5F9;
+    --op-gray-200: #E2E8F0;
+    --op-gray-300: #CBD5E1;
+    --op-gray-400: #94A3B8;
+    --op-gray-500: #64748B;
+    --op-gray-600: #475569;
+    --op-gray-700: #334155;
+    --op-gray-800: #1E293B;
+    --op-gray-900: #0F172A;
+
+    /* ============= BACKGROUND ============= */
+    --op-bg-primary: #FFFFFF;
+    --op-bg-secondary: #F8FAFC;
+    --op-bg-gradient: linear-gradient(135deg, #0066CC 0%, #00A651 100%);
+    --op-bg-gradient-petrol: linear-gradient(135deg, #FF6B35 0%, #FF8F66 100%);
+    --op-bg-gradient-diesel: linear-gradient(135deg, #4ECDC4 0%, #7EDAD4 100%);
+
+    /* ============= TYPOGRAPHY ============= */
+    --op-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+    /* Font Sizes (Mobile-optimized, larger for readability) */
+    --op-text-xs: 11px;
+    /* Captions, timestamps */
+    --op-text-sm: 12px;
+    /* Secondary text */
+    --op-text-base: 14px;
+    /* Body text */
+    --op-text-lg: 16px;
+    /* Input fields */
+    --op-text-xl: 18px;
+    /* Subheadings */
+    --op-text-2xl: 20px;
+    /* Card titles */
+    --op-text-3xl: 24px;
+    /* Page titles */
+    --op-text-4xl: 28px;
+    /* Large numbers */
+    --op-text-5xl: 32px;
+    /* Hero text */
+    --op-text-6xl: 40px;
+    /* Sale amounts */
+
+    /* Font Weights */
+    --op-font-regular: 400;
+    --op-font-medium: 500;
+    --op-font-semibold: 600;
+    --op-font-bold: 700;
+
+    /* ============= SPACING ============= */
+    --op-space-1: 4px;
+    --op-space-2: 8px;
+    --op-space-3: 12px;
+    --op-space-4: 16px;
+    --op-space-5: 20px;
+    --op-space-6: 24px;
+    --op-space-8: 32px;
+    --op-space-10: 40px;
+    --op-space-12: 48px;
+
+    /* ============= COMPONENT SIZES ============= */
+    /* Touch Targets (Mobile - minimum 48px) */
+    --op-button-height: 48px;
+    /* Standard button */
+    --op-button-height-lg: 56px;
+    /* Large buttons */
+    --op-button-height-xl: 72px;
+    /* Extra large (NEW SALE) */
+    --op-button-height-xxl: 88px;
+    /* Record sale button */
+
+    --op-input-height: 56px;
+    /* Input fields */
+    --op-input-height-lg: 72px;
+    /* Large inputs (amounts) */
+
+    /* Layout */
+    --op-bottom-nav-height: 72px;
+    --op-header-height: 64px;
+    --op-card-radius: 16px;
+    --op-button-radius: 12px;
+    --op-input-radius: 12px;
+
+    /* ============= SHADOWS ============= */
+    --op-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --op-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --op-shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --op-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --op-shadow-glow: 0 0 20px rgba(0, 102, 204, 0.3);
+
+    /* ============= TRANSITIONS ============= */
+    --op-transition-fast: 150ms ease;
+    --op-transition: 200ms ease;
+    --op-transition-slow: 300ms ease;
+}
+
+/* ============= ANIMATIONS ============= */
+
+/* Pulse animation for primary action buttons */
+@keyframes op-pulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 166, 81, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 0 12px rgba(0, 166, 81, 0);
+    }
+}
+
+/* Success checkmark bounce */
+@keyframes op-checkmark-bounce {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Fade up entrance */
+@keyframes op-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading spinner */
+@keyframes op-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Blink for unread indicators */
+@keyframes op-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Count up effect for numbers */
+@keyframes op-count-up {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============= UTILITY CLASSES ============= */
+
+.op-animate-pulse {
+    animation: op-pulse 2s infinite;
+}
+
+.op-animate-checkmark {
+    animation: op-checkmark-bounce 0.5s ease-out forwards;
+}
+
+.op-animate-fade-up {
+    animation: op-fade-up 0.3s ease-out forwards;
+}
+
+.op-animate-spin {
+    animation: op-spin 1s linear infinite;
+}
+
+.op-animate-blink {
+    animation: op-blink 1.5s ease-in-out infinite;
+}
+
+/* ============= BUTTON STYLES ============= */
+
+.op-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--op-space-2);
+    height: var(--op-button-height);
+    padding: 0 var(--op-space-6);
+    font-family: var(--op-font-family);
+    font-size: var(--op-text-lg);
+    font-weight: var(--op-font-semibold);
+    border-radius: var(--op-button-radius);
+    border: none;
+    cursor: pointer;
+    transition: all var(--op-transition);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.op-btn-primary {
+    background: var(--op-bg-gradient);
+    color: white;
+    box-shadow: var(--op-shadow);
+}
+
+.op-btn-primary:active {
+    transform: scale(0.98);
+}
+
+.op-btn-primary-lg {
+    height: var(--op-button-height-xl);
+    font-size: var(--op-text-xl);
+    animation: op-pulse 2s infinite;
+}
+
+.op-btn-primary-xl {
+    height: var(--op-button-height-xxl);
+    font-size: var(--op-text-2xl);
+    padding: var(--op-space-4) var(--op-space-8);
+}
+
+.op-btn-success {
+    background: linear-gradient(135deg, var(--op-success) 0%, var(--op-secondary) 100%);
+    color: white;
+}
+
+.op-btn-danger {
+    background: linear-gradient(135deg, var(--op-danger) 0%, #DC2626 100%);
+    color: white;
+}
+
+.op-btn-ghost {
+    background: transparent;
+    color: var(--op-gray-600);
+    border: 1px solid var(--op-gray-300);
+}
+
+.op-btn-ghost:hover {
+    background: var(--op-gray-100);
+}
+
+.op-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    animation: none;
+}
+
+/* ============= INPUT STYLES ============= */
+
+.op-input {
+    width: 100%;
+    height: var(--op-input-height);
+    padding: 0 var(--op-space-4);
+    font-family: var(--op-font-family);
+    font-size: var(--op-text-lg);
+    border: 2px solid var(--op-gray-200);
+    border-radius: var(--op-input-radius);
+    background: white;
+    transition: border-color var(--op-transition);
+}
+
+.op-input:focus {
+    outline: none;
+    border-color: var(--op-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.op-input-lg {
+    height: var(--op-input-height-lg);
+    font-size: var(--op-text-4xl);
+    font-weight: var(--op-font-bold);
+    text-align: center;
+}
+
+/* ============= CARD STYLES ============= */
+
+.op-card {
+    background: white;
+    border-radius: var(--op-card-radius);
+    padding: var(--op-space-4);
+    box-shadow: var(--op-shadow-sm);
+    border: 1px solid var(--op-gray-100);
+}
+
+.op-card-elevated {
+    box-shadow: var(--op-shadow-md);
+}
+
+/* ============= FUEL TYPE SELECTORS ============= */
+
+.op-fuel-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--op-space-4);
+}
+
+.op-fuel-card {
+    padding: var(--op-space-6);
+    border-radius: var(--op-card-radius);
+    border: 3px solid var(--op-gray-200);
+    background: white;
+    cursor: pointer;
+    transition: all var(--op-transition);
+    text-align: center;
+}
+
+.op-fuel-card.petrol.selected {
+    border-color: var(--op-petrol);
+    background: rgba(255, 107, 53, 0.05);
+    transform: scale(1.02);
+}
+
+.op-fuel-card.diesel.selected {
+    border-color: var(--op-diesel);
+    background: rgba(78, 205, 196, 0.05);
+    transform: scale(1.02);
+}
+
+.op-fuel-card:active {
+    transform: scale(0.98);
+}
+
+/* ============= QUICK AMOUNT BUTTONS ============= */
+
+.op-quick-amounts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--op-space-3);
+}
+
+.op-quick-amount {
+    height: var(--op-button-height);
+    font-size: var(--op-text-lg);
+    font-weight: var(--op-font-semibold);
+    background: var(--op-gray-100);
+    color: var(--op-gray-700);
+    border: none;
+    border-radius: var(--op-button-radius);
+    cursor: pointer;
+    transition: all var(--op-transition);
+}
+
+.op-quick-amount:active {
+    background: var(--op-primary);
+    color: white;
+    transform: scale(0.95);
+}
+
+/* ============= PAYMENT METHOD SELECTOR ============= */
+
+.op-payment-methods {
+    display: flex;
+    gap: var(--op-space-2);
+    flex-wrap: wrap;
+}
+
+.op-payment-method {
+    flex: 1;
+    min-width: 70px;
+    padding: var(--op-space-3) var(--op-space-2);
+    border: 2px solid var(--op-gray-200);
+    border-radius: var(--op-button-radius);
+    background: white;
+    text-align: center;
+    font-size: var(--op-text-sm);
+    font-weight: var(--op-font-medium);
+    cursor: pointer;
+    transition: all var(--op-transition);
+}
+
+.op-payment-method.selected {
+    border-color: var(--op-primary);
+    background: rgba(0, 102, 204, 0.05);
+    color: var(--op-primary);
+}
+
+/* ============= STATS CARDS ============= */
+
+.op-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--op-space-3);
+}
+
+.op-stat-card {
+    background: var(--op-bg-gradient);
+    color: white;
+    padding: var(--op-space-4);
+    border-radius: var(--op-card-radius);
+    text-align: center;
+}
+
+.op-stat-value {
+    font-size: var(--op-text-2xl);
+    font-weight: var(--op-font-bold);
+    margin-bottom: var(--op-space-1);
+}
+
+.op-stat-label {
+    font-size: var(--op-text-xs);
+    opacity: 0.9;
+}
+
+/* ============= PROGRESS BAR ============= */
+
+.op-progress {
+    height: 8px;
+    background: var(--op-gray-200);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.op-progress-bar {
+    height: 100%;
+    background: var(--op-bg-gradient);
+    border-radius: 4px;
+    transition: width var(--op-transition-slow);
+}
+
+.op-progress-bar.petrol {
+    background: var(--op-bg-gradient-petrol);
+}
+
+.op-progress-bar.diesel {
+    background: var(--op-bg-gradient-diesel);
+}
+
+/* ============= CONNECTION INDICATOR ============= */
+
+.op-connection {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--op-space-2);
+    padding: var(--op-space-1) var(--op-space-3);
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    font-size: var(--op-text-xs);
+    font-weight: var(--op-font-medium);
+}
+
+.op-connection-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--op-success);
+}
+
+.op-connection-dot.offline {
+    background: var(--op-danger);
+}
+
+.op-connection-dot.connecting {
+    background: var(--op-warning);
+    animation: op-blink 1s infinite;
+}
+
+/* ============= LIVE INDICATOR ============= */
+
+.op-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--op-danger);
+    color: white;
+    font-size: 10px;
+    font-weight: var(--op-font-bold);
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.op-live-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    animation: op-blink 1s infinite;
+}
+
+/* ============= BOTTOM NAVIGATION ============= */
+
+.op-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--op-bottom-nav-height);
+    background: white;
+    border-top: 1px solid var(--op-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    z-index: 100;
+}
+
+.op-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: var(--op-space-2);
+    color: var(--op-gray-500);
+    font-size: var(--op-text-xs);
+    font-weight: var(--op-font-medium);
+    text-decoration: none;
+    transition: color var(--op-transition);
+}
+
+.op-nav-item.active {
+    color: var(--op-primary);
+}
+
+.op-nav-item-center {
+    background: var(--op-bg-gradient);
+    color: white !important;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin-top: -20px;
+    box-shadow: var(--op-shadow-md);
+}
+
+/* ============= SUCCESS SCREEN ============= */
+
+.op-success-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--op-success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--op-space-6);
+    animation: op-checkmark-bounce 0.5s ease-out forwards;
+}
+
+.op-success-icon svg {
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+/* ============= LOADING STATES ============= */
+
+.op-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--op-space-4);
+    padding: var(--op-space-12);
+}
+
+.op-spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--op-gray-200);
+    border-top-color: var(--op-primary);
+    border-radius: 50%;
+    animation: op-spin 1s linear infinite;
+}
+
+/* ============= RESPONSIVE ADJUSTMENTS ============= */
+
+@media (max-width: 380px) {
+    :root {
+        --op-text-5xl: 28px;
+        --op-text-6xl: 36px;
+    }
+
+    .op-quick-amounts {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    :root {
+        --op-card-radius: 20px;
+    }
+}

@@ -1,0 +1,616 @@
+/* Import Fonts - MUST be first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@import "tailwindcss";
+
+/* Import theme files */
+@import "../styles/operator-theme.css";
+@import "../styles/admin-mobile.css";
+
+/* ============================================
+   PSO PUMP MANAGEMENT SYSTEM - DESIGN SYSTEM
+   ============================================ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ============================================ */
+
+:root {
+  /* ─────────────────────────────────────────
+     PRIMARY BRAND COLORS (PSO Modern Theme)
+     ───────────────────────────────────────── */
+  --color-primary: #00A651;  /* PSO Green */
+  --color-primary-hover: #008f45;
+  --color-secondary: #0066CC; /* PSO Blue */
+  --color-accent: #F58220;    /* PSO Orange */
+
+  /* ─────────────────────────────────────────
+     SEMANTIC COLORS
+     ───────────────────────────────────────── */
+  --color-success: #00A651;
+  --color-success-bg: #E6F6EC;
+  --color-success-text: #006833;
+
+  --color-warning: #F58220;
+  --color-warning-bg: #FEF2E8;
+  --color-warning-text: #995114;
+
+  --color-danger: #EF4444;
+  --color-danger-bg: #FEE2E2;
+  --color-danger-text: #991B1B;
+
+  --color-info: #0066CC;
+  --color-info-bg: #E6F0FA;
+  --color-info-text: #004080;
+
+  --color-neutral: #64748B;
+
+  /* ─────────────────────────────────────────
+     FUEL TYPE COLORS
+     ───────────────────────────────────────── */
+  --color-petrol: #FF6B35;
+  --color-petrol-light: #FFA07A;
+  --color-diesel: #4ECDC4;
+  --color-diesel-light: #7FE5DD;
+  --color-cng: #95E1D3;
+
+  /* ─────────────────────────────────────────
+     CHART / DATA VISUALIZATION
+     ───────────────────────────────────────── */
+  --color-chart-1: #8B5CF6;
+  --color-chart-2: #EC4899;
+  --color-chart-3: #F59E0B;
+  --color-trend-positive: #10B981;
+  --color-trend-negative: #EF4444;
+
+  /* ─────────────────────────────────────────
+     LIGHT MODE SURFACES
+     ───────────────────────────────────────── */
+  --background: #FFFFFF;
+  --surface: #F8FAFC;
+  --surface-hover: #F1F5F9;
+  --border: #E2E8F0;
+  --border-focus: #0066CC;
+
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+
+  /* ─────────────────────────────────────────
+     TYPOGRAPHY
+     ───────────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Font Sizes */
+  --text-display: 48px;
+  --text-h1: 36px;
+  --text-h2: 28px;
+  --text-h3: 20px;
+  --text-h4: 18px;
+  --text-body-lg: 16px;
+  --text-body: 14px;
+  --text-body-sm: 12px;
+  --text-caption: 11px;
+  --text-metric: 32px;
+  --text-currency: 24px;
+
+  /* ─────────────────────────────────────────
+     SPACING (8px base)
+     ───────────────────────────────────────── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  --space-4xl: 64px;
+
+  /* ─────────────────────────────────────────
+     BORDER RADIUS
+     ───────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-default: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* ─────────────────────────────────────────
+     SHADOWS (Light Mode)
+     ───────────────────────────────────────── */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-2: 0 3px 6px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.12);
+  --shadow-3: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.10);
+  --shadow-4: 0 15px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.05);
+
+  /* ─────────────────────────────────────────
+     LAYOUT DIMENSIONS
+     ───────────────────────────────────────── */
+  --header-height: 72px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --bottom-nav-height: 72px;
+  --operator-header-height: 64px;
+
+  /* ─────────────────────────────────────────
+     TRANSITIONS
+     ───────────────────────────────────────── */
+  --transition-fast: 150ms ease-in-out;
+  --transition-default: 200ms ease-out;
+  --transition-slow: 300ms ease-out;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+.dark,
+[data-theme="dark"] {
+  --background: #0F172A;
+  --surface: #1E293B;
+  --surface-hover: #334155;
+  --border: #334155;
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+
+  /* Dark Mode Shadows */
+  --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 3px 6px rgba(0, 0, 0, 0.6);
+  --shadow-3: 0 10px 20px rgba(0, 0, 0, 0.7);
+  --shadow-4: 0 15px 25px rgba(0, 0, 0, 0.8);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+  box-sizing: border-box;
+}
+
+
+html {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  /* Mobile base size */
+  background: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* Prevent font scaling in landscape */
+}
+
+/* Tablet Typography Scale */
+@media (min-width: 481px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Desktop Typography Scale */
+@media (min-width: 769px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
+body {
+  font-size: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   CONTAINER UTILITIES
+   ============================================ */
+.container {
+  width: 100%;
+  padding: 0 16px;
+  margin: 0 auto;
+}
+
+@media (min-width: 481px) {
+  .container {
+    max-width: 720px;
+    padding: 0 24px;
+  }
+}
+
+@media (min-width: 769px) {
+  .container {
+    max-width: 1200px;
+    padding: 0 32px;
+  }
+}
+
+@media (min-width: 1367px) {
+  .container {
+    max-width: 1440px;
+    padding: 0 48px;
+  }
+}
+
+/* ============================================
+   GLASSMORPHISM UTILITIES
+   ============================================ */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   GRADIENT UTILITIES
+   ============================================ */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+.gradient-petrol {
+  background: linear-gradient(180deg, var(--color-petrol) 0%, var(--color-petrol-light) 100%);
+}
+
+.gradient-diesel {
+  background: linear-gradient(180deg, var(--color-diesel) 0%, var(--color-diesel-light) 100%);
+}
+
+/* ============================================
+   CARD STYLES
+   ============================================ */
+.card {
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-1);
+  transition: all var(--transition-default);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-2);
+  transform: translateY(-2px);
+}
+
+.card-stat {
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-2);
+  transition: all var(--transition-default);
+}
+
+.card-stat:hover {
+  box-shadow: var(--shadow-3);
+  transform: translateY(-4px);
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-body);
+  font-weight: 600;
+  border-radius: var(--radius-default);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  height: 44px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: var(--shadow-1);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--color-info-bg);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: white;
+  box-shadow: var(--shadow-1);
+}
+
+.btn-danger:hover {
+  filter: brightness(1.1);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  background: var(--surface-hover);
+}
+
+.btn-lg {
+  height: 56px;
+  padding: var(--space-lg) var(--space-2xl);
+  font-size: var(--text-body-lg);
+}
+
+.btn-xl {
+  height: 64px;
+  padding: var(--space-lg) var(--space-2xl);
+  font-size: 18px;
+  border-radius: var(--radius-lg);
+}
+
+/* ============================================
+   INPUT STYLES
+   ============================================ */
+.input {
+  width: 100%;
+  height: 44px;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-body);
+  font-family: var(--font-sans);
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-default);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.input-lg {
+  height: 56px;
+  font-size: var(--text-body-lg);
+}
+
+.input-numeric {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  text-align: right;
+}
+
+/* ============================================
+   BADGE STYLES
+   ============================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--text-body-sm);
+  font-weight: 500;
+  border-radius: var(--radius-full);
+}
+
+.badge-success {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.badge-warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.badge-danger {
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+}
+
+.badge-info {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Pulse animation for alerts */
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-custom {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Wave animation for tank gauges */
+@keyframes wave {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-25%);
+  }
+}
+
+.animate-wave {
+  animation: wave 3s ease-in-out infinite;
+}
+
+/* Fade in + slide up for page transitions */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeSlideUp 300ms ease-out;
+}
+
+/* Shimmer for loading skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-default);
+}
+
+/* Counter number animation */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-count {
+  animation: countUp 1s ease-out;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-metric {
+  font-size: var(--text-metric);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.text-currency {
+  font-size: var(--text-currency);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================
+   SAFE AREA UTILITIES
+   ============================================ */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pl-safe {
+  padding-left: env(safe-area-inset-left);
+}
+
+.pr-safe {
+  padding-right: env(safe-area-inset-right);
+}
