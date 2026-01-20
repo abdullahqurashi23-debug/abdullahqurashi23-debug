@@ -5,10 +5,12 @@ import { Search, Bell, Moon, Sun, User, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 import { useThemeStore } from '@/lib/store/themeStore';
+import { API_URL } from '@/lib/api';
 
 export const Header = ({ onMenuToggle }: { onMenuToggle?: () => void }) => {
     const { theme, toggleTheme } = useThemeStore();
     const [todayDate, setTodayDate] = useState('');
+    const [pumpName, setPumpName] = useState('PSO Station');
 
     useEffect(() => {
         const now = new Date();
@@ -17,6 +19,23 @@ export const Header = ({ onMenuToggle }: { onMenuToggle?: () => void }) => {
             day: 'numeric',
             year: 'numeric'
         }));
+
+        // Fetch pump info from settings
+        const fetchPumpInfo = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${API_URL}/settings/pump-info`, {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.name) setPumpName(data.name);
+                }
+            } catch (error) {
+                console.error('Failed to fetch pump info:', error);
+            }
+        };
+        fetchPumpInfo();
     }, []);
 
     return (
@@ -40,7 +59,7 @@ export const Header = ({ onMenuToggle }: { onMenuToggle?: () => void }) => {
                     </div>
                     <div className="hidden sm:block">
                         <h1 className="text-sm font-bold text-slate-900 tracking-tight">
-                            Al-Rehman Filling
+                            {pumpName}
                         </h1>
                         <span className="text-[10px] bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                             PSO Station
