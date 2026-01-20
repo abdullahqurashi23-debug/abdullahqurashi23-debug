@@ -22,16 +22,26 @@ export declare class TanksController {
         lastUpdated: Date;
         lastRefillDate: Date | null;
     }[]>;
+    getPredictions(): Promise<{
+        fuelType: import("@prisma/client").$Enums.FuelType;
+        currentLevel: number;
+        capacity: number;
+        avgDailyConsumption: number;
+        daysUntilEmpty: number | null;
+        daysUntilCritical: number | null;
+        status: "CRITICAL" | "WARNING" | "OK";
+        message: string;
+    }[]>;
     getDeliveries(take?: string): Promise<({
         receivedBy: {
             fullName: string;
         };
     } & {
         id: string;
-        notes: string | null;
         fuelType: import("@prisma/client").$Enums.FuelType;
         pricePerLiter: import("@prisma/client/runtime/library").Decimal;
         paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
+        notes: string | null;
         supplierName: string;
         deliveryDate: Date;
         quantityLiters: import("@prisma/client/runtime/library").Decimal;
@@ -80,10 +90,10 @@ export declare class TanksController {
         id: string;
     }): Promise<{
         id: string;
-        notes: string | null;
         fuelType: import("@prisma/client").$Enums.FuelType;
         pricePerLiter: import("@prisma/client/runtime/library").Decimal;
         paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
+        notes: string | null;
         supplierName: string;
         deliveryDate: Date;
         quantityLiters: import("@prisma/client/runtime/library").Decimal;

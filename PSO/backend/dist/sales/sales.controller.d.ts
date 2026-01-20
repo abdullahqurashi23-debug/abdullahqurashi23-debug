@@ -13,14 +13,13 @@ export declare class SalesController {
         totalAmount: number;
         liters: number;
         id: string;
-        operatorId: string;
-        notes: string | null;
-        saleDate: Date;
-        saleNumber: number;
-        shiftId: string;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
         paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+        notes: string | null;
+        saleNumber: number;
+        operatorId: string;
+        shiftId: string;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
         vehicleNumber: string | null;
         customerName: string | null;
         customerPhone: string | null;
@@ -28,6 +27,7 @@ export declare class SalesController {
         creditDueDate: Date | null;
         creditPaid: boolean;
         creditCustomerId: string | null;
+        saleDate: Date;
     }>;
     getTodaySales(): Promise<{
         sales: ({
@@ -36,17 +36,16 @@ export declare class SalesController {
             };
         } & {
             id: string;
-            operatorId: string;
-            notes: string | null;
-            saleDate: Date;
-            saleNumber: number;
-            shiftId: string;
             fuelType: import("@prisma/client").$Enums.FuelType;
-            liters: import("@prisma/client/runtime/library").Decimal;
             pricePerLiter: import("@prisma/client/runtime/library").Decimal;
+            paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+            notes: string | null;
+            saleNumber: number;
+            operatorId: string;
+            shiftId: string;
+            liters: import("@prisma/client/runtime/library").Decimal;
             totalAmount: import("@prisma/client/runtime/library").Decimal;
             paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-            paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
             vehicleNumber: string | null;
             customerName: string | null;
             customerPhone: string | null;
@@ -54,6 +53,7 @@ export declare class SalesController {
             creditDueDate: Date | null;
             creditPaid: boolean;
             creditCustomerId: string | null;
+            saleDate: Date;
         })[];
         totals: {
             totalAmount: number;
@@ -66,17 +66,16 @@ export declare class SalesController {
     getMyTodaySales(user: AuthUser): Promise<{
         sales: {
             id: string;
-            operatorId: string;
-            notes: string | null;
-            saleDate: Date;
-            saleNumber: number;
-            shiftId: string;
             fuelType: import("@prisma/client").$Enums.FuelType;
-            liters: import("@prisma/client/runtime/library").Decimal;
             pricePerLiter: import("@prisma/client/runtime/library").Decimal;
+            paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+            notes: string | null;
+            saleNumber: number;
+            operatorId: string;
+            shiftId: string;
+            liters: import("@prisma/client/runtime/library").Decimal;
             totalAmount: import("@prisma/client/runtime/library").Decimal;
             paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-            paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
             vehicleNumber: string | null;
             customerName: string | null;
             customerPhone: string | null;
@@ -84,6 +83,7 @@ export declare class SalesController {
             creditDueDate: Date | null;
             creditPaid: boolean;
             creditCustomerId: string | null;
+            saleDate: Date;
         }[];
         totals: {
             totalAmount: number;
@@ -96,17 +96,16 @@ export declare class SalesController {
         };
     } & {
         id: string;
-        operatorId: string;
-        notes: string | null;
-        saleDate: Date;
-        saleNumber: number;
-        shiftId: string;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        liters: import("@prisma/client/runtime/library").Decimal;
         pricePerLiter: import("@prisma/client/runtime/library").Decimal;
+        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+        notes: string | null;
+        saleNumber: number;
+        operatorId: string;
+        shiftId: string;
+        liters: import("@prisma/client/runtime/library").Decimal;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
         paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
         vehicleNumber: string | null;
         customerName: string | null;
         customerPhone: string | null;
@@ -114,6 +113,7 @@ export declare class SalesController {
         creditDueDate: Date | null;
         creditPaid: boolean;
         creditCustomerId: string | null;
+        saleDate: Date;
     })[]>;
     getFuelPrices(): Promise<{
         PETROL: number;
@@ -136,17 +136,16 @@ export declare class SalesController {
     }>;
     approveCreditSale(id: string, user: AuthUser): Promise<{
         id: string;
-        operatorId: string;
-        notes: string | null;
-        saleDate: Date;
-        saleNumber: number;
-        shiftId: string;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        liters: import("@prisma/client/runtime/library").Decimal;
         pricePerLiter: import("@prisma/client/runtime/library").Decimal;
+        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+        notes: string | null;
+        saleNumber: number;
+        operatorId: string;
+        shiftId: string;
+        liters: import("@prisma/client/runtime/library").Decimal;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
         paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
         vehicleNumber: string | null;
         customerName: string | null;
         customerPhone: string | null;
@@ -154,20 +153,20 @@ export declare class SalesController {
         creditDueDate: Date | null;
         creditPaid: boolean;
         creditCustomerId: string | null;
+        saleDate: Date;
     }>;
     rejectCreditSale(id: string, user: AuthUser): Promise<{
         id: string;
-        operatorId: string;
-        notes: string | null;
-        saleDate: Date;
-        saleNumber: number;
-        shiftId: string;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        liters: import("@prisma/client/runtime/library").Decimal;
         pricePerLiter: import("@prisma/client/runtime/library").Decimal;
+        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
+        notes: string | null;
+        saleNumber: number;
+        operatorId: string;
+        shiftId: string;
+        liters: import("@prisma/client/runtime/library").Decimal;
         totalAmount: import("@prisma/client/runtime/library").Decimal;
         paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-        paymentStatus: import("@prisma/client").$Enums.PaymentStatus;
         vehicleNumber: string | null;
         customerName: string | null;
         customerPhone: string | null;
@@ -175,6 +174,7 @@ export declare class SalesController {
         creditDueDate: Date | null;
         creditPaid: boolean;
         creditCustomerId: string | null;
+        saleDate: Date;
     }>;
     getAnalytics(range: string): Promise<any[]>;
 }

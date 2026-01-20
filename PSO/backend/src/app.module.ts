@@ -11,6 +11,7 @@ import { TanksService } from './tanks/tanks.service';
 import { GatewayModule } from './gateway/gateway.module';
 import { BankingModule } from './banking/banking.module';
 import { MessagesModule } from './messages/messages.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MessagesModule } from './messages/messages.module';
     TanksModule,
     BankingModule,
     MessagesModule,
+    SettingsModule,
   ],
 })
 export class AppModule implements OnModuleInit {

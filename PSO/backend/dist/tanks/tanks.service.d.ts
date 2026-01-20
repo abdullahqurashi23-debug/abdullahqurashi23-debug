@@ -55,22 +55,22 @@ export declare class TanksService {
         receivedById: string;
     }): Promise<{
         id: string;
-        notes: string | null;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        pricePerLiter: import("@prisma/client/runtime/library").Decimal;
-        paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
         supplierName: string;
         deliveryDate: Date;
         quantityLiters: import("@prisma/client/runtime/library").Decimal;
+        pricePerLiter: import("@prisma/client/runtime/library").Decimal;
         totalCost: import("@prisma/client/runtime/library").Decimal;
         invoiceNumber: string | null;
         invoiceDate: Date | null;
+        paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
         paidAmount: import("@prisma/client/runtime/library").Decimal;
         paymentDueDate: Date | null;
         tankLevelBefore: import("@prisma/client/runtime/library").Decimal;
         tankLevelAfter: import("@prisma/client/runtime/library").Decimal;
         density: import("@prisma/client/runtime/library").Decimal | null;
         temperature: import("@prisma/client/runtime/library").Decimal | null;
+        notes: string | null;
         receivedById: string;
     }>;
     getStats(): Promise<{
@@ -83,28 +83,39 @@ export declare class TanksService {
         lastUpdated: Date;
         lastRefillDate: Date | null;
     }[]>;
+    getPredictions(): Promise<{
+        fuelType: import("@prisma/client").$Enums.FuelType;
+        currentLevel: number;
+        capacity: number;
+        avgDailyConsumption: number;
+        daysUntilEmpty: number | null;
+        daysUntilCritical: number | null;
+        status: "CRITICAL" | "WARNING" | "OK";
+        message: string;
+    }[]>;
+    private getPredictionMessage;
     getDeliveries(take?: number): Promise<({
         receivedBy: {
             fullName: string;
         };
     } & {
         id: string;
-        notes: string | null;
         fuelType: import("@prisma/client").$Enums.FuelType;
-        pricePerLiter: import("@prisma/client/runtime/library").Decimal;
-        paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
         supplierName: string;
         deliveryDate: Date;
         quantityLiters: import("@prisma/client/runtime/library").Decimal;
+        pricePerLiter: import("@prisma/client/runtime/library").Decimal;
         totalCost: import("@prisma/client/runtime/library").Decimal;
         invoiceNumber: string | null;
         invoiceDate: Date | null;
+        paymentStatus: import("@prisma/client").$Enums.DeliveryPaymentStatus;
         paidAmount: import("@prisma/client/runtime/library").Decimal;
         paymentDueDate: Date | null;
         tankLevelBefore: import("@prisma/client/runtime/library").Decimal;
         tankLevelAfter: import("@prisma/client/runtime/library").Decimal;
         density: import("@prisma/client/runtime/library").Decimal | null;
         temperature: import("@prisma/client/runtime/library").Decimal | null;
+        notes: string | null;
         receivedById: string;
     })[]>;
     private createLowFuelAlert;

@@ -28,6 +28,9 @@ let TanksController = class TanksController {
     async getStats() {
         return this.tanksService.getStats();
     }
+    async getPredictions() {
+        return this.tanksService.getPredictions();
+    }
     async getDeliveries(take) {
         return this.tanksService.getDeliveries(take ? parseInt(take) : 10);
     }
@@ -57,6 +60,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], TanksController.prototype, "getStats", null);
+__decorate([
+    (0, common_1.Get)('predictions'),
+    (0, common_1.UseGuards)(guards_1.RolesGuard),
+    (0, decorators_1.Roles)('ADMIN'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], TanksController.prototype, "getPredictions", null);
 __decorate([
     (0, common_1.Get)('deliveries'),
     (0, common_1.UseGuards)(guards_1.RolesGuard),

@@ -197,6 +197,93 @@ export class TanksService {
         });
     }
 
+    // Get tank run-out predictions based on average daily consumption
+    async getPredictions() {
+        const tanks = await this.findAll();
+
+        // Get sales from last 7 days to calculate average daily consumption
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+        const recentSales = await this.prisma.sale.groupBy({
+            by: ['fuelType'],
+            where: {
+                saleDate: { gte: sevenDaysAgo },
+            },
+            _sum: {
+                liters: true,
+            },
+        });
+
+        const predictions = tanks.map((tank) => {
+            const currentLevel = Number(tank.currentLevel);
+            const capacity = Number(tank.capacity);
+            const minThreshold = Number(tank.minThreshold);
+
+            // Find sales for this fuel type
+            const salesData = recentSales.find((s) => s.fuelType === tank.fuelType);
+            const totalLitersLast7Days = salesData?._sum?.liters ? Number(salesData._sum.liters) : 0;
+
+            // Calculate average daily consumption
+            const avgDailyConsumption = totalLitersLast7Days / 7;
+
+            // Calculate days until empty and days until critical (at min threshold)
+            let daysUntilEmpty = null;
+            let daysUntilCritical = null;
+
+            if (avgDailyConsumption > 0) {
+                daysUntilEmpty = Math.floor(currentLevel / avgDailyConsumption);
+                const litersAboveThreshold = currentLevel - minThreshold;
+                daysUntilCritical = litersAboveThreshold > 0
+                    ? Math.floor(litersAboveThreshold / avgDailyConsumption)
+                    : 0;
+            }
+
+            // Determine status
+            let status: 'CRITICAL' | 'WARNING' | 'OK' = 'OK';
+            if (daysUntilCritical !== null) {
+                if (daysUntilCritical <= 1) status = 'CRITICAL';
+                else if (daysUntilCritical <= 3) status = 'WARNING';
+            }
+
+            return {
+                fuelType: tank.fuelType,
+                currentLevel,
+                capacity,
+                avgDailyConsumption: Math.round(avgDailyConsumption),
+                daysUntilEmpty,
+                daysUntilCritical,
+                status,
+                message: this.getPredictionMessage(tank.fuelType, daysUntilEmpty, avgDailyConsumption),
+            };
+        });
+
+        return predictions;
+    }
+
+    private getPredictionMessage(
+        fuelType: string,
+        daysUntilEmpty: number | null,
+        avgDailyConsumption: number,
+    ): string {
+        if (avgDailyConsumption === 0) {
+            return `No recent ${fuelType.toLowerCase()} sales data`;
+        }
+        if (daysUntilEmpty === null) {
+            return 'Unable to calculate';
+        }
+        if (daysUntilEmpty === 0) {
+            return `⚠️ ${fuelType} will run out TODAY!`;
+        }
+        if (daysUntilEmpty === 1) {
+            return `⚠️ ${fuelType} will run out TOMORROW!`;
+        }
+        if (daysUntilEmpty <= 3) {
+            return `🔶 ${fuelType} will run out in ${daysUntilEmpty} days`;
+        }
+        return `✅ ${fuelType} has ~${daysUntilEmpty} days remaining`;
+    }
+
     // Get fuel deliveries
     async getDeliveries(take = 10) {
         return this.prisma.fuelDelivery.findMany({

@@ -23,6 +23,7 @@ const tanks_service_1 = require("./tanks/tanks.service");
 const gateway_module_1 = require("./gateway/gateway.module");
 const banking_module_1 = require("./banking/banking.module");
 const messages_module_1 = require("./messages/messages.module");
+const settings_module_1 = require("./settings/settings.module");
 let AppModule = class AppModule {
     authService;
     tanksService;
@@ -52,6 +53,7 @@ exports.AppModule = AppModule = __decorate([
             tanks_module_1.TanksModule,
             banking_module_1.BankingModule,
             messages_module_1.MessagesModule,
+            settings_module_1.SettingsModule,
         ],
     }),
     __metadata("design:paramtypes", [auth_service_1.AuthService,

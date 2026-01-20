@@ -27,6 +27,13 @@ export class TanksController {
         return this.tanksService.getStats();
     }
 
+    @Get('predictions')
+    @UseGuards(RolesGuard)
+    @Roles('ADMIN')
+    async getPredictions() {
+        return this.tanksService.getPredictions();
+    }
+
     @Get('deliveries')
     @UseGuards(RolesGuard)
     @Roles('ADMIN')
