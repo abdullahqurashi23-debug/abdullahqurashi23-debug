@@ -101,7 +101,7 @@ export default function Header() {
 
                         {/* CV Download Button - Desktop */}
                         <a
-                            href="/cv.pdf"
+                            href="/api/admin/upload-cv?download=1"
                             download
                             className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border)] hover:border-[var(--brand-primary)] rounded-lg transition-all duration-200"
                         >
@@ -163,7 +163,7 @@ export default function Header() {
                                 ))}
                                 <li className="pt-4 flex gap-3">
                                     <a
-                                        href="/cv.pdf"
+                                        href="/api/admin/upload-cv?download=1"
                                         download
                                         className="flex-1 flex items-center justify-center gap-2 py-3 border border-[var(--border)] rounded-lg text-[var(--text-secondary)] font-medium hover:border-[var(--brand-primary)] transition-all"
                                         onClick={() => setIsMenuOpen(false)}

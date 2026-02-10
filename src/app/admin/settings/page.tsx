@@ -29,7 +29,7 @@ export default function AdminSettingsPage() {
         twitter: '',
         website: '',
         google_scholar: '',
-        cv_url: '/cv.pdf',
+        cv_url: '/api/admin/upload-cv?download=1',
     });
 
     const [aboutContent, setAboutContent] = useState({
@@ -300,7 +300,7 @@ export default function AdminSettingsPage() {
                                                         });
                                                         const data = await res.json();
                                                         if (data.success) {
-                                                            setSettings({ ...settings, cv_url: '/cv.pdf' });
+                                                            setSettings({ ...settings, cv_url: '/api/admin/upload-cv?download=1' });
                                                             setSaved(true);
                                                             setTimeout(() => setSaved(false), 3000);
                                                             alert('✅ CV uploaded successfully! (' + data.size + ')');
@@ -318,7 +318,7 @@ export default function AdminSettingsPage() {
                                         {/* Current CV Status */}
                                         <div className="flex items-center gap-2 text-sm text-gray-500">
                                             <FiFileText className="text-red-500" />
-                                            <span>Current: <a href="/cv.pdf" target="_blank" className="text-blue-500 hover:underline font-medium">cv.pdf</a></span>
+                                            <span>Current: <a href="/api/admin/upload-cv?download=1" target="_blank" className="text-blue-500 hover:underline font-medium">cv.pdf</a></span>
                                             <span className="text-gray-400">• Visitors can download from the header CV button</span>
                                         </div>
                                     </div>
@@ -532,8 +532,8 @@ export default function AdminSettingsPage() {
 
                         {securityMsg && (
                             <div className={`p-4 rounded-lg mb-6 text-sm ${securityMsg.type === 'success'
-                                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                    : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                                 }`}>
                                 {securityMsg.text}
                             </div>

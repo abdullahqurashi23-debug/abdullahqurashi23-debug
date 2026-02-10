@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { supabase } from '@/lib/supabase';
+import { neon } from '@neondatabase/serverless';
+
+const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL || '');
 
 export async function PUT(request: NextRequest) {
     try {
@@ -21,13 +23,10 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        // Get the current admin user (we use the first/only admin)
-        const { data: admins } = await supabase
-            .from('admin_users')
-            .select('*')
-            .limit(1);
-
+        // Get the current admin user
+        const admins = await sql`SELECT * FROM admin_users LIMIT 1`;
         const admin = admins?.[0];
+
         if (!admin) {
             return NextResponse.json(
                 { error: 'Admin user not found' },
@@ -36,7 +35,6 @@ export async function PUT(request: NextRequest) {
         }
 
         // Verify current password
-        // Support both bcrypt hash and plain-text 'admin' fallback
         let isValid = false;
         try {
             isValid = await bcrypt.compare(currentPassword, admin.password_hash);
@@ -52,8 +50,9 @@ export async function PUT(request: NextRequest) {
             );
         }
 
-        // Build update object
-        const updates: Record<string, any> = {};
+        // Update fields
+        let emailChanged = false;
+        let passwordChanged = false;
 
         if (newEmail) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,7 +62,8 @@ export async function PUT(request: NextRequest) {
                     { status: 400 }
                 );
             }
-            updates.email = newEmail;
+            await sql`UPDATE admin_users SET email = ${newEmail} WHERE id = ${admin.id}::uuid`;
+            emailChanged = true;
         }
 
         if (newPassword) {
@@ -73,34 +73,22 @@ export async function PUT(request: NextRequest) {
                     { status: 400 }
                 );
             }
-            updates.password_hash = await bcrypt.hash(newPassword, 10);
-        }
-
-        // Update admin user
-        const { error } = await supabase
-            .from('admin_users')
-            .update(updates)
-            .eq('id', admin.id);
-
-        if (error) {
-            console.error('Error updating admin:', error);
-            return NextResponse.json(
-                { error: 'Failed to update credentials' },
-                { status: 500 }
-            );
+            const hash = await bcrypt.hash(newPassword, 10);
+            await sql`UPDATE admin_users SET password_hash = ${hash} WHERE id = ${admin.id}::uuid`;
+            passwordChanged = true;
         }
 
         return NextResponse.json({
             success: true,
             message: 'Credentials updated successfully',
-            emailChanged: !!newEmail,
-            passwordChanged: !!newPassword,
+            emailChanged,
+            passwordChanged,
         });
 
     } catch (error: any) {
         console.error('Error updating credentials:', error?.message || error);
         return NextResponse.json(
-            { error: 'Internal server error' },
+            { error: 'Internal server error: ' + (error?.message || 'unknown') },
             { status: 500 }
         );
     }
