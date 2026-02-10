@@ -242,7 +242,9 @@ export default function ProjectsPage() {
                     {/* Search Bar */}
                     <div className="max-w-md mx-auto">
                         <div className="relative">
-                            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" size={18} />
+                            <div className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center opacity-70">
+                                <img src="/emal_logo.png" alt="Search" className="w-full h-full object-contain" />
+                            </div>
                             <input
                                 type="text"
                                 placeholder="Search projects..."
