@@ -12,7 +12,7 @@ async function rawQuery(query: string, params: any[] = []): Promise<any[]> {
 // Supabase-compatible query builder for Neon
 class QueryBuilder {
     private table: string;
-    private conditions: { column: string; value: any }[] = [];
+    private conditions: { column: string; value: any; op?: string }[] = [];
     private orderByCol: string | null = null;
     private orderAsc: boolean = true;
     private limitCount: number | null = null;
@@ -37,6 +37,21 @@ class QueryBuilder {
 
     eq(column: string, value: any) {
         this.conditions.push({ column, value });
+        return this;
+    }
+
+    neq(column: string, value: any) {
+        this.conditions.push({ column, value, op: '!=' });
+        return this;
+    }
+
+    contains(column: string, value: any[]) {
+        this.conditions.push({ column, value, op: '@>' });
+        return this;
+    }
+
+    ilike(column: string, value: string) {
+        this.conditions.push({ column, value, op: 'ILIKE' });
         return this;
     }
 
@@ -78,8 +93,16 @@ class QueryBuilder {
         let clause = '';
         this.conditions.forEach((cond, i) => {
             const paramIdx = startIdx + i;
-            clause += i === 0 ? ` WHERE "${cond.column}" = $${paramIdx}` : ` AND "${cond.column}" = $${paramIdx}`;
-            values.push(cond.value);
+            const op = cond.op || '=';
+            const prefix = i === 0 ? ' WHERE ' : ' AND ';
+            if (op === '@>') {
+                // Array contains — cast value to jsonb
+                clause += `${prefix}"${cond.column}"::jsonb @> $${paramIdx}::jsonb`;
+                values.push(JSON.stringify(cond.value));
+            } else {
+                clause += `${prefix}"${cond.column}" ${op} $${paramIdx}`;
+                values.push(cond.value);
+            }
         });
         return { clause, values };
     }
