@@ -218,7 +218,7 @@ export default function EditCertificationPage() {
 
                         <p className="text-xs text-gray-500 text-center">Or enter an image URL below</p>
                         <input
-                            className="mt-2 w-full max-w-md p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-sm"
+                            className="mt-2 w-full max-w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
                             value={formData.image_url}
                             onChange={e => setFormData({ ...formData, image_url: e.target.value })}
                             placeholder="https://example.com/certificate.png"

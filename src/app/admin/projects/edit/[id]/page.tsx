@@ -222,7 +222,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Project Title <span className="text-red-500">*</span></label>
                             <input
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.title}
                                 onChange={e => setFormData({ ...formData, title: e.target.value })}
                             />
@@ -231,7 +231,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Slug <span className="text-red-500">*</span></label>
                             <input
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.slug}
                                 onChange={e => setFormData({ ...formData, slug: e.target.value })}
                             />
@@ -242,7 +242,7 @@ export default function EditProjectPage() {
                     <div className="mt-6">
                         <label className="block font-medium mb-2">Short Description</label>
                         <textarea
-                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                             value={formData.short_description}
                             onChange={e => setFormData({ ...formData, short_description: e.target.value })}
                             rows={2}
@@ -253,7 +253,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Visibility</label>
                             <select
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.visibility}
                                 onChange={e => setFormData({ ...formData, visibility: e.target.value })}
                             >
@@ -304,7 +304,7 @@ export default function EditProjectPage() {
                         <label className="block font-medium mb-3">Tags</label>
                         <div className="flex gap-2 mb-3">
                             <input
-                                className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={newTag}
                                 onChange={e => setNewTag(e.target.value)}
                                 placeholder="Add a tag"
@@ -335,7 +335,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Problem Statement</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.problem_statement}
                                 onChange={e => setFormData({ ...formData, problem_statement: e.target.value })}
                                 rows={3}
@@ -345,7 +345,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Approach / Methodology</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.approach}
                                 onChange={e => setFormData({ ...formData, approach: e.target.value })}
                                 rows={4}
@@ -355,7 +355,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Results / Impact</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.results}
                                 onChange={e => setFormData({ ...formData, results: e.target.value })}
                                 rows={3}
@@ -365,7 +365,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Limitations / Future Work</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.limitations}
                                 onChange={e => setFormData({ ...formData, limitations: e.target.value })}
                                 rows={2}
@@ -381,7 +381,7 @@ export default function EditProjectPage() {
                                     This code will be shown blurred on the project page.
                                 </p>
                                 <textarea
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition font-mono text-sm"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition font-mono text-sm"
                                     value={formData.gated_code}
                                     onChange={e => setFormData({ ...formData, gated_code: e.target.value })}
                                     rows={12}
@@ -392,7 +392,7 @@ export default function EditProjectPage() {
                         <div>
                             <label className="block font-medium mb-2">Full Description</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.full_description}
                                 onChange={e => setFormData({ ...formData, full_description: e.target.value })}
                                 rows={6}
@@ -407,13 +407,13 @@ export default function EditProjectPage() {
 
                     <div className="flex gap-2 mb-4">
                         <input
-                            className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                            className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                             value={newMetricLabel}
                             onChange={e => setNewMetricLabel(e.target.value)}
                             placeholder="Label (e.g., Accuracy)"
                         />
                         <input
-                            className="w-32 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                            className="w-32 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                             value={newMetricValue}
                             onChange={e => setNewMetricValue(e.target.value)}
                             placeholder="Value (e.g., 98%)"
@@ -450,7 +450,7 @@ export default function EditProjectPage() {
                     <div>
                         <label className="block font-medium mb-2">GitHub Repository URL</label>
                         <input
-                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                             value={formData.github_link}
                             onChange={e => setFormData({ ...formData, github_link: e.target.value })}
                             placeholder="https://github.com/username/repo"

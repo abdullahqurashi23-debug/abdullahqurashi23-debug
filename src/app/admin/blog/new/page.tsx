@@ -211,7 +211,7 @@ export default function AddBlogPostPage() {
                         />
 
                         <input
-                            className="mt-2 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-sm"
+                            className="mt-2 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 text-sm"
                             value={formData.cover_image}
                             onChange={e => setFormData({ ...formData, cover_image: e.target.value })}
                             placeholder="Or enter image URL"
@@ -229,7 +229,7 @@ export default function AddBlogPostPage() {
                             <div>
                                 <label className="block font-medium mb-2">Title <span className="text-red-500">*</span></label>
                                 <input
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                     value={formData.title}
                                     onChange={e => handleTitleChange(e.target.value)}
                                     placeholder="e.g., Understanding Neural Networks"
@@ -238,7 +238,7 @@ export default function AddBlogPostPage() {
                             <div>
                                 <label className="block font-medium mb-2">Slug <span className="text-red-500">*</span></label>
                                 <input
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                     value={formData.slug}
                                     onChange={e => setFormData({ ...formData, slug: e.target.value })}
                                 />
@@ -248,7 +248,7 @@ export default function AddBlogPostPage() {
                         <div>
                             <label className="block font-medium mb-2">Excerpt</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                 value={formData.excerpt}
                                 onChange={e => setFormData({ ...formData, excerpt: e.target.value })}
                                 rows={2}
@@ -259,7 +259,7 @@ export default function AddBlogPostPage() {
                         <div>
                             <label className="block font-medium mb-2">Content (Markdown supported)</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 font-mono text-sm"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 font-mono text-sm"
                                 value={formData.content}
                                 onChange={e => setFormData({ ...formData, content: e.target.value })}
                                 rows={15}
@@ -278,7 +278,7 @@ Write your blog post content here. Markdown formatting is supported:
                             <div>
                                 <label className="block font-medium mb-2">Status</label>
                                 <select
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                     value={formData.status}
                                     onChange={e => setFormData({ ...formData, status: e.target.value as any })}
                                 >
@@ -290,7 +290,7 @@ Write your blog post content here. Markdown formatting is supported:
                                 <label className="block font-medium mb-2">Tags</label>
                                 <div className="flex gap-2">
                                     <input
-                                        className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
+                                        className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
                                         value={newTag}
                                         onChange={e => setNewTag(e.target.value)}
                                         placeholder="Add tag..."

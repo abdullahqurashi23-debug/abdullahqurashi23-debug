@@ -177,7 +177,7 @@ export default function AddCertificationPage() {
                             Or enter an image URL below
                         </p>
                         <input
-                            className="mt-2 w-full max-w-md p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
+                            className="mt-2 w-full max-w-md p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm"
                             value={formData.image_url}
                             onChange={e => setFormData({ ...formData, image_url: e.target.value })}
                             placeholder="https://example.com/certificate.png"
@@ -194,7 +194,7 @@ export default function AddCertificationPage() {
                         <div>
                             <label className="block font-medium mb-2">Title <span className="text-red-500">*</span></label>
                             <input
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.title}
                                 onChange={e => setFormData({ ...formData, title: e.target.value })}
                                 placeholder="e.g., TensorFlow Developer Certificate"
@@ -204,7 +204,7 @@ export default function AddCertificationPage() {
                         <div>
                             <label className="block font-medium mb-2">Issuer <span className="text-red-500">*</span></label>
                             <input
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.issuer}
                                 onChange={e => setFormData({ ...formData, issuer: e.target.value })}
                                 placeholder="e.g., Google, AWS, Coursera"
@@ -214,7 +214,7 @@ export default function AddCertificationPage() {
                         <div>
                             <label className="block font-medium mb-2">Description</label>
                             <textarea
-                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                 value={formData.description}
                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                 rows={3}
@@ -227,7 +227,7 @@ export default function AddCertificationPage() {
                                 <label className="block font-medium mb-2">Issue Date</label>
                                 <input
                                     type="date"
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                     value={formData.issue_date}
                                     onChange={e => setFormData({ ...formData, issue_date: e.target.value })}
                                 />
@@ -236,7 +236,7 @@ export default function AddCertificationPage() {
                             <div>
                                 <label className="block font-medium mb-2">Certificate URL</label>
                                 <input
-                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                                     value={formData.certificate_url}
                                     onChange={e => setFormData({ ...formData, certificate_url: e.target.value })}
                                     placeholder="https://credential.net/verify/..."
