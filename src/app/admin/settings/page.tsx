@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FiUser, FiMail, FiLinkedin, FiGithub, FiTwitter, FiGlobe, FiUpload, FiSave, FiCheck, FiPlus, FiX, FiImage, FiFileText, FiAward, FiLock, FiEye, FiEyeOff, FiShield } from 'react-icons/fi';
 import Button from '@/components/ui/Button';
-import { supabase } from '@/lib/supabase';
 
 export default function AdminSettingsPage() {
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [activeTab, setActiveTab] = useState<'profile' | 'about' | 'social' | 'security'>('profile');
     const [showCurrentPw, setShowCurrentPw] = useState(false);
@@ -15,17 +15,16 @@ export default function AdminSettingsPage() {
     const [securityForm, setSecurityForm] = useState({ currentPassword: '', newEmail: '', newPassword: '', confirmPassword: '' });
     const [securityMsg, setSecurityMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [photoPreview, setPhotoPreview] = useState<string | null>('/profile-placeholder.jpg');
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [newSkill, setNewSkill] = useState('');
 
     const [settings, setSettings] = useState({
-        name: 'Emal Kamawal',
-        title: 'AI Engineer & ML Researcher',
-        email: 'emalkamawal@gmail.com',
-        bio: 'M.S. in Artificial Intelligence and Data Analytics. Focused on Healthcare AI, Computer Vision, and Brain-Computer Interfaces.',
+        name: '',
+        title: '',
+        email: '',
+        bio: '',
         profile_photo: '',
-        linkedin: 'https://linkedin.com/in/emalkamawal',
-        github: 'https://github.com/emalkamawal',
+        linkedin: '',
+        github: '',
         twitter: '',
         website: '',
         google_scholar: '',
@@ -33,25 +32,96 @@ export default function AdminSettingsPage() {
     });
 
     const [aboutContent, setAboutContent] = useState({
-        headline: 'Building the Future of Healthcare AI',
-        introduction: `I'm passionate about leveraging artificial intelligence to solve complex healthcare challenges. My research focuses on developing privacy-preserving machine learning systems, advanced computer vision algorithms for medical imaging, and brain-computer interfaces for assistive technologies.`,
-        education: [
-            { degree: 'M.S. in Artificial Intelligence', institution: 'Texas A&M University', year: '2024' },
-            { degree: 'B.S. in Computer Science', institution: 'University of Engineering', year: '2021' },
-        ],
-        skills: ['Python', 'TensorFlow', 'PyTorch', 'Computer Vision', 'NLP', 'Healthcare AI', 'Medical Imaging', 'EEG/BCI', 'Federated Learning', 'Deep Learning'],
-        interests: 'When not working on AI research, I enjoy hiking, reading science fiction, and contributing to open-source projects.',
+        headline: '',
+        introduction: '',
+        education: [] as { degree: string; institution: string; year: string }[],
+        skills: [] as string[],
+        interests: '',
     });
 
-    const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        fetchSettings();
+    }, []);
+
+    const fetchSettings = async () => {
+        try {
+            const res = await fetch('/api/admin/settings');
+            const data = await res.json();
+
+            if (data.profile) {
+                // Merge profile data
+                setSettings(prev => ({
+                    ...prev,
+                    name: data.profile.name || '',
+                    title: data.profile.title || '',
+                    email: data.profile.email || '',
+                    bio: data.profile.bio || '',
+                    profile_photo: data.profile.profile_photo || '',
+                    cv_url: data.profile.cv_url || prev.cv_url,
+                }));
+                if (data.profile.profile_photo) {
+                    setPhotoPreview(data.profile.profile_photo);
+                }
+            }
+
+            if (data.social) {
+                setSettings(prev => ({
+                    ...prev,
+                    linkedin: data.social.linkedin || '',
+                    github: data.social.github || '',
+                    twitter: data.social.twitter || '',
+                    website: data.social.website || '',
+                    google_scholar: data.social.google_scholar || '',
+                }));
+            }
+
+            if (data.about) {
+                setAboutContent({
+                    headline: data.about.headline || '',
+                    introduction: data.about.introduction || '',
+                    education: data.about.education || [],
+                    skills: data.about.skills || [],
+                    interests: data.about.interests || '',
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setPhotoFile(file);
+            // Show preview
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPhotoPreview(reader.result as string);
             };
             reader.readAsDataURL(file);
+
+            // Upload immediately
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    setSettings(prev => ({ ...prev, profile_photo: data.url }));
+                } else {
+                    console.error('Photo upload failed:', data.error);
+                    alert('Failed to upload photo: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Photo upload error:', error);
+                alert('Failed to upload photo');
+            }
         }
     };
 
@@ -93,23 +163,47 @@ export default function AdminSettingsPage() {
     };
 
     const handleSave = async () => {
-        setLoading(true);
+        setSaving(true);
         try {
-            // Upload photo if selected
-            if (photoFile) {
-                const fileExt = photoFile.name.split('.').pop();
-                const fileName = `profile-${Date.now()}.${fileExt}`;
-                await supabase.storage.from('portfolio').upload(`profile/${fileName}`, photoFile);
-            }
+            const profileData = {
+                name: settings.name,
+                title: settings.title,
+                email: settings.email,
+                bio: settings.bio,
+                profile_photo: settings.profile_photo,
+                cv_url: settings.cv_url,
+            };
 
-            // In production, save to settings table
-            await new Promise(resolve => setTimeout(resolve, 500));
-            setSaved(true);
-            setTimeout(() => setSaved(false), 3000);
+            const socialData = {
+                linkedin: settings.linkedin,
+                github: settings.github,
+                twitter: settings.twitter,
+                website: settings.website,
+                google_scholar: settings.google_scholar,
+            };
+
+            const res = await fetch('/api/admin/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    profile: profileData,
+                    social: socialData,
+                    about: aboutContent
+                }),
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+            } else {
+                alert('Error saving settings: ' + data.error);
+            }
         } catch (error) {
             console.error('Error saving settings:', error);
+            alert('Failed to save settings');
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
@@ -162,6 +256,10 @@ export default function AdminSettingsPage() {
             setLoading(false);
         }
     };
+
+    if (loading) {
+        return <div className="p-8 flex justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div>;
+    }
 
     return (
         <div className="p-8 max-w-5xl mx-auto">
@@ -249,6 +347,7 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.name}
                                         onChange={e => setSettings({ ...settings, name: e.target.value })}
+                                        placeholder="Emal Kamawal"
                                     />
                                 </div>
                                 <div>
@@ -257,16 +356,18 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.title}
                                         onChange={e => setSettings({ ...settings, title: e.target.value })}
+                                        placeholder="AI Engineer & ML Researcher"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block font-medium mb-2">Email</label>
+                                    <label className="block font-medium mb-2">Email (Display only)</label>
                                     <div className="relative">
                                         <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                         <input
                                             className="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                             value={settings.email}
                                             onChange={e => setSettings({ ...settings, email: e.target.value })}
+                                            placeholder="contact@example.com"
                                         />
                                     </div>
                                 </div>
@@ -330,6 +431,7 @@ export default function AdminSettingsPage() {
                                         value={settings.bio}
                                         onChange={e => setSettings({ ...settings, bio: e.target.value })}
                                         rows={3}
+                                        placeholder="Brief introduction..."
                                     />
                                 </div>
                             </div>
@@ -373,6 +475,7 @@ export default function AdminSettingsPage() {
                                         value={aboutContent.interests}
                                         onChange={e => setAboutContent({ ...aboutContent, interests: e.target.value })}
                                         rows={2}
+                                        placeholder="Hobbies and interests..."
                                     />
                                 </div>
                             </div>
@@ -473,6 +576,7 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.linkedin}
                                         onChange={e => setSettings({ ...settings, linkedin: e.target.value })}
+                                        placeholder="https://linkedin.com/in/username"
                                     />
                                 </div>
                             </div>
@@ -484,6 +588,7 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.github}
                                         onChange={e => setSettings({ ...settings, github: e.target.value })}
+                                        placeholder="https://github.com/username"
                                     />
                                 </div>
                             </div>
@@ -495,6 +600,7 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.twitter}
                                         onChange={e => setSettings({ ...settings, twitter: e.target.value })}
+                                        placeholder="https://x.com/username"
                                     />
                                 </div>
                             </div>
@@ -506,6 +612,7 @@ export default function AdminSettingsPage() {
                                         className="w-full p-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900"
                                         value={settings.website}
                                         onChange={e => setSettings({ ...settings, website: e.target.value })}
+                                        placeholder="https://example.com"
                                     />
                                 </div>
                             </div>
@@ -623,12 +730,14 @@ export default function AdminSettingsPage() {
                 )}
 
                 {/* Save Button */}
-                <div className="flex justify-end">
-                    <Button onClick={handleSave} className="flex items-center gap-2" disabled={loading}>
-                        <FiSave />
-                        {loading ? 'Saving...' : 'Save All Settings'}
-                    </Button>
-                </div>
+                {activeTab !== 'security' && (
+                    <div className="flex justify-end">
+                        <Button onClick={handleSave} className="flex items-center gap-2" disabled={saving}>
+                            <FiSave />
+                            {saving ? 'Saving...' : 'Save All Settings'}
+                        </Button>
+                    </div>
+                )}
             </div>
         </div>
     );

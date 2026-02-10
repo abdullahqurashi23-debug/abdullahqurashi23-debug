@@ -84,24 +84,21 @@ export default function EditCertificationPage() {
         if (!imageFile) return formData.image_url || imagePreview || null;
 
         try {
-            const fileExt = imageFile.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `certifications/${fileName}`;
+            const uploadData = new FormData();
+            uploadData.append('file', imageFile);
 
-            const { error: uploadError } = await supabase.storage
-                .from('portfolio')
-                .upload(filePath, imageFile);
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: uploadData,
+            });
 
-            if (uploadError) {
-                console.error('Upload error:', uploadError);
+            const data = await res.json();
+            if (!data.success) {
+                console.error('Upload failed:', data.error);
                 return imagePreview;
             }
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('portfolio')
-                .getPublicUrl(filePath);
-
-            return publicUrl;
+            return data.url;
         } catch (error) {
             console.error('Upload error:', error);
             return imagePreview;

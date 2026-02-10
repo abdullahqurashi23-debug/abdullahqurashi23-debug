@@ -84,24 +84,23 @@ export default function AddBlogPostPage() {
         if (!imageFile) return formData.cover_image || null;
 
         try {
-            const fileExt = imageFile.name.split('.').pop();
-            const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-            const filePath = `blog/${fileName}`;
+            const uploadData = new FormData();
+            uploadData.append('file', imageFile);
 
-            const { error: uploadError } = await supabase.storage
-                .from('portfolio')
-                .upload(filePath, imageFile);
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: uploadData,
+            });
 
-            if (uploadError) {
-                return imagePreview;
+            const data = await res.json();
+            if (!data.success) {
+                console.error('Upload failed:', data.error);
+                return imagePreview; // Fallback to preview
             }
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('portfolio')
-                .getPublicUrl(filePath);
-
-            return publicUrl;
+            return data.url;
         } catch (error) {
+            console.error('Upload error:', error);
             return imagePreview;
         }
     };
