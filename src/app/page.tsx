@@ -1,12 +1,98 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowRight, FiGithub, FiLinkedin, FiMail, FiAward, FiCode, FiBriefcase, FiExternalLink } from 'react-icons/fi';
 import Card from '@/components/ui/Card';
 import { motion } from 'framer-motion';
 
+// Default fallback data
+const defaultProfile = {
+  name: 'Emal Kamawal',
+  title: 'AI Researcher in Healthcare',
+  bio: 'Specializing in Brain-Computer Interfaces, Computer Vision, and Healthcare AI. Bridging the gap between biological signals and artificial intelligence.',
+};
+
+const defaultSocial = {
+  github: 'https://github.com',
+  linkedin: 'https://linkedin.com',
+  email: 'emal@example.com',
+};
+
+const defaultFeaturedProjects = [
+  {
+    slug: 'thought-viz',
+    title: 'Thought Viz: EEG-Driven Visual Reconstruction',
+    short_description: 'Novel BCI pipeline for reconstructing visual scenes from EEG signals using adaptive encoder-decoder architecture with diffusion models. 78% accuracy achieved.',
+    images: ['/projects/thought-viz.png'],
+    tags: ['BCI', 'Deep Learning', 'EEG', 'Signal Processing'],
+    visibility: 'public',
+  },
+  {
+    slug: 'brain-tumor-segmentation',
+    title: 'Brain Tumor Segmentation',
+    short_description: 'U-Net based architecture achieving 98.2% dice coefficient on BRATS dataset for automated tumor detection and clinical deployment.',
+    images: ['/projects/brain-tumor.png'],
+    tags: ['Medical Imaging', 'Segmentation', 'U-Net'],
+    visibility: 'public',
+  },
+  {
+    slug: 'ivf-expert-fusion',
+    title: 'Expert Fusion Network for IVF',
+    short_description: 'Multi-architecture deep learning framework combining U-Net, attention mechanisms, and mixture-of-experts achieving 98% accuracy in embryo morphology grading.',
+    images: ['/projects/ivf-fusion.png'],
+    tags: ['Healthcare AI', 'Deep Learning', 'IVF'],
+    visibility: 'gated',
+  },
+];
+
 export default function Home() {
+  // Dynamic data from DB
+  const [profile, setProfile] = useState(defaultProfile);
+  const [social, setSocial] = useState(defaultSocial);
+  const [featuredProjects, setFeaturedProjects] = useState(defaultFeaturedProjects);
+
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      try {
+        const res = await fetch('/api/portfolio');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.profile) {
+          setProfile({
+            name: data.profile.name || defaultProfile.name,
+            title: data.profile.title || defaultProfile.title,
+            bio: data.profile.bio || defaultProfile.bio,
+          });
+        }
+
+        if (data.social) {
+          setSocial({
+            github: data.social.github || defaultSocial.github,
+            linkedin: data.social.linkedin || defaultSocial.linkedin,
+            email: data.profile?.email || data.social.email || defaultSocial.email,
+          });
+        }
+
+        if (data.projects && data.projects.length > 0) {
+          setFeaturedProjects(data.projects.map((p: any) => ({
+            slug: p.slug,
+            title: p.title,
+            short_description: p.short_description || '',
+            images: typeof p.images === 'string' ? JSON.parse(p.images) : (p.images || []),
+            tags: typeof p.tags === 'string' ? JSON.parse(p.tags) : (p.tags || []),
+            visibility: p.visibility || 'public',
+          })));
+        }
+      } catch (e) {
+        // Silently fall back to defaults
+      }
+    };
+    fetchPortfolioData();
+  }, []);
+
   // Animation variants with reduced motion support
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -62,34 +148,6 @@ export default function Home() {
     { icon: <FiBriefcase />, label: 'Industry Experience' },
   ];
 
-  // Featured projects (static for now, will be fetched from Supabase)
-  const featuredProjects = [
-    {
-      slug: 'thought-viz',
-      title: 'Thought Viz: EEG-Driven Visual Reconstruction',
-      description: 'Novel BCI pipeline for reconstructing visual scenes from EEG signals using adaptive encoder-decoder architecture with diffusion models. 78% accuracy achieved.',
-      image: '/projects/thought-viz.png',
-      tags: ['BCI', 'Deep Learning', 'EEG', 'Signal Processing'],
-      visibility: 'public',
-    },
-    {
-      slug: 'brain-tumor-segmentation',
-      title: 'Brain Tumor Segmentation',
-      description: 'U-Net based architecture achieving 98.2% dice coefficient on BRATS dataset for automated tumor detection and clinical deployment.',
-      image: '/projects/brain-tumor.png',
-      tags: ['Medical Imaging', 'Segmentation', 'U-Net'],
-      visibility: 'public',
-    },
-    {
-      slug: 'ivf-expert-fusion',
-      title: 'Expert Fusion Network for IVF',
-      description: 'Multi-architecture deep learning framework combining U-Net, attention mechanisms, and mixture-of-experts achieving 98% accuracy in embryo morphology grading.',
-      image: '/projects/ivf-fusion.png',
-      tags: ['Healthcare AI', 'Deep Learning', 'IVF'],
-      visibility: 'gated',
-    },
-  ];
-
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -122,15 +180,15 @@ export default function Home() {
               </motion.div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display tracking-tight leading-tight">
-                AI Researcher in{' '}
-                <span className="text-gradient">Healthcare</span>
+                {profile.title ? (
+                  <>{profile.title.replace(/in\s+\w+$/i, 'in ')}<span className="text-gradient">{profile.title.split(/in\s+/i).pop()}</span></>
+                ) : (
+                  <>AI Researcher in{' '}<span className="text-gradient">Healthcare</span></>
+                )}
               </h1>
 
               <p className="text-lg md:text-xl text-[var(--text-secondary)] max-w-xl leading-relaxed">
-                Specializing in <strong className="text-[var(--text-primary)]">Brain-Computer Interfaces</strong>,
-                <strong className="text-[var(--text-primary)]"> Computer Vision</strong>, and
-                <strong className="text-[var(--text-primary)]"> Healthcare AI</strong>.
-                Bridging the gap between biological signals and artificial intelligence.
+                {profile.bio}
               </p>
 
               {/* CTAs */}
@@ -155,7 +213,7 @@ export default function Home() {
                 <span className="text-sm text-[var(--text-muted)]">Connect:</span>
                 <div className="flex gap-3">
                   <a
-                    href="https://github.com"
+                    href={social.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--brand-primary)] hover:bg-[var(--surface)] transition-all"
@@ -164,7 +222,7 @@ export default function Home() {
                     <FiGithub size={20} />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href={social.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--brand-primary)] hover:bg-[var(--surface)] transition-all"
@@ -173,7 +231,7 @@ export default function Home() {
                     <FiLinkedin size={20} />
                   </a>
                   <a
-                    href="mailto:emal@example.com"
+                    href={`mailto:${social.email}`}
                     className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--brand-primary)] hover:bg-[var(--surface)] transition-all"
                     aria-label="Email"
                   >
@@ -322,7 +380,7 @@ export default function Home() {
                     {/* Image */}
                     <div className="aspect-video -mx-6 -mt-6 mb-6 overflow-hidden relative">
                       <img
-                        src={project.image}
+                        src={project.images?.[0] || '/projects/thought-viz.png'}
                         alt={project.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
@@ -336,7 +394,7 @@ export default function Home() {
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag) => (
+                      {(project.tags || []).map((tag: string) => (
                         <span key={tag} className="badge badge-primary">
                           {tag}
                         </span>
@@ -348,7 +406,7 @@ export default function Home() {
                       {project.title}
                     </h3>
                     <p className="text-[var(--text-secondary)] line-clamp-2 mb-4">
-                      {project.description}
+                      {project.short_description}
                     </p>
 
                     {/* Link */}

@@ -47,8 +47,16 @@ export default function AdminPublicationsPage() {
         if (!confirm('Are you sure you want to delete this publication?')) return;
 
         setDeleting(id);
-        await supabase.from('publications').delete().eq('id', id);
-        setPublications(publications.filter(p => p.id !== id));
+        try {
+            const { error } = await supabase.from('publications').delete().eq('id', id);
+            if (error) {
+                alert('Failed to delete publication: ' + error.message);
+            } else {
+                setPublications(publications.filter(p => p.id !== id));
+            }
+        } catch (err: any) {
+            alert('Failed to delete publication: ' + (err?.message || 'Unknown error'));
+        }
         setDeleting(null);
     };
 
@@ -172,8 +180,8 @@ export default function AdminPublicationsPage() {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition ${filter === f
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
                                 }`}
                         >
                             {f === 'all' ? 'All' : f.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}

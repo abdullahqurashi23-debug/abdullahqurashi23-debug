@@ -33,29 +33,27 @@ export default function AboutPage() {
     ]);
 
     useEffect(() => {
-        const fetchCertifications = async () => {
+        const fetchPortfolioData = async () => {
             try {
-                const { createClient } = await import('@supabase/supabase-js');
-                const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-                if (supabaseUrl && !supabaseUrl.includes('your-project')) {
-                    const supabase = createClient(
-                        supabaseUrl,
-                        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-                    );
-                    const { data, error } = await supabase
-                        .from('certifications')
-                        .select('*')
-                        .order('date_issued', { ascending: false });
+                const res = await fetch('/api/portfolio');
+                if (!res.ok) return;
+                const data = await res.json();
 
-                    if (data && data.length > 0 && !error) {
-                        setCertifications(data);
-                    }
+                if (data.certifications && data.certifications.length > 0) {
+                    setCertifications(data.certifications.map((c: any) => ({
+                        id: c.id,
+                        title: c.title,
+                        issuer: c.issuer,
+                        date_issued: c.date_issued || '',
+                        credential_url: c.credential_url || '',
+                        image_url: c.image_url || '',
+                    })));
                 }
             } catch (e) {
                 console.log('Using sample certifications');
             }
         };
-        fetchCertifications();
+        fetchPortfolioData();
     }, []);
 
     const fadeInUp = {

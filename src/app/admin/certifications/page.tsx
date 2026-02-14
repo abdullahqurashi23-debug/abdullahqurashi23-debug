@@ -67,13 +67,17 @@ export default function AdminCertificationsPage() {
             const { data, error } = await supabase
                 .from('certifications')
                 .select('*')
-                .order('issue_date', { ascending: false });
+                .order('created_at', { ascending: false });
 
-            if (data && data.length > 0) {
+            if (error) {
+                console.error('Error fetching certifications:', error);
+                // Only use sample data if there's an actual error (like table doesn't exist)
+                setCertifications(sampleCertifications);
+            } else if (data && data.length > 0) {
                 setCertifications(data);
             } else {
-                // Use sample data as fallback
-                setCertifications(sampleCertifications);
+                // Empty table — show empty state rather than fake data
+                setCertifications([]);
             }
         } catch (error) {
             console.error('Error fetching certifications:', error);
@@ -87,9 +91,14 @@ export default function AdminCertificationsPage() {
 
         setDeleting(id);
         try {
-            await supabase.from('certifications').delete().eq('id', id);
-            setCertifications(certifications.filter(c => c.id !== id));
-        } catch (error) {
+            const { error } = await supabase.from('certifications').delete().eq('id', id);
+            if (error) {
+                alert('Failed to delete certification: ' + error.message);
+            } else {
+                setCertifications(certifications.filter(c => c.id !== id));
+            }
+        } catch (error: any) {
+            alert('Failed to delete certification: ' + (error?.message || 'Unknown error'));
             console.error('Error deleting:', error);
         }
         setDeleting(null);

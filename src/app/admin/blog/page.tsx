@@ -96,10 +96,15 @@ export default function AdminBlogPage() {
 
         setDeleting(id);
         try {
-            await supabase.from('blog_posts').delete().eq('id', id);
-            setPosts(posts.filter(p => p.id !== id));
-        } catch (error) {
-            console.error('Error deleting:', error);
+            const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+            if (error) {
+                alert('Failed to delete post: ' + error.message);
+            } else {
+                setPosts(posts.filter(p => p.id !== id));
+            }
+        } catch (err: any) {
+            alert('Failed to delete post: ' + (err?.message || 'Unknown error'));
+            console.error('Error deleting:', err);
         }
         setDeleting(null);
     };

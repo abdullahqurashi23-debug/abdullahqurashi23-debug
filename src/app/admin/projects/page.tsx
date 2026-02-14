@@ -43,8 +43,16 @@ export default function AdminProjectsPage() {
     const handleDelete = async (id: string) => {
         if (!confirm('Are you sure you want to delete this project?')) return;
 
-        await supabase.from('projects').delete().eq('id', id);
-        fetchProjects();
+        try {
+            const { error } = await supabase.from('projects').delete().eq('id', id);
+            if (error) {
+                alert('Failed to delete project: ' + error.message);
+            } else {
+                fetchProjects();
+            }
+        } catch (err: any) {
+            alert('Failed to delete project: ' + (err?.message || 'Unknown error'));
+        }
     };
 
     const toggleVisibility = async (id: string, current: string) => {
@@ -134,8 +142,8 @@ export default function AdminProjectsPage() {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 ${filter === f
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                                 }`}
                         >
                             {f !== 'all' && getVisibilityIcon(f)}
@@ -221,8 +229,8 @@ export default function AdminProjectsPage() {
                                                 onClick={() => toggleFeatured(project.id, project.is_featured)}
                                                 disabled={updating === project.id}
                                                 className={`p-2 rounded-lg transition-all ${project.is_featured
-                                                        ? 'text-yellow-500 bg-yellow-100 dark:bg-yellow-900/30'
-                                                        : 'text-gray-300 hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
+                                                    ? 'text-yellow-500 bg-yellow-100 dark:bg-yellow-900/30'
+                                                    : 'text-gray-300 hover:text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20'
                                                     }`}
                                                 title={project.is_featured ? 'Remove from featured' : 'Add to featured'}
                                             >
