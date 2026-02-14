@@ -97,9 +97,11 @@ export default function BlogPage() {
                 .eq('status', 'published')
                 .order('published_at', { ascending: false });
 
-            if (data && data.length > 0) {
+            if (data) {
+                // If data is empty array, it means no posts - which is valid
                 setPosts(data);
             } else {
+                // Fallback only if data is null (which shouldn't happen with select)
                 setPosts(staticPosts);
             }
         } catch (error) {

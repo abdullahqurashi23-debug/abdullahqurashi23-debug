@@ -111,24 +111,11 @@ export default function PublicationsPage() {
     }, []);
 
     const fetchPublications = async () => {
-        // Check if Supabase is properly configured (not a placeholder URL)
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-        const isSupabaseConfigured = supabaseUrl && !supabaseUrl.includes('your-project');
-
-        if (!isSupabaseConfigured) {
-            // Use static publications when Supabase is not configured
-            setPublications(staticPublications);
-            setLoading(false);
-            return;
-        }
-
         try {
             const { data, error } = await supabase
                 .from('publications')
                 .select('*')
                 .order('year', { ascending: false });
-
-            if (error) throw error;
 
             if (data && data.length > 0) {
                 setPublications(data);

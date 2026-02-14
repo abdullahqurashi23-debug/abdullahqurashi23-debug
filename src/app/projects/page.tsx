@@ -142,24 +142,11 @@ export default function ProjectsPage() {
     }, []);
 
     const fetchProjects = async () => {
-        // Check if Supabase is properly configured (not a placeholder URL)
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-        const isSupabaseConfigured = supabaseUrl && !supabaseUrl.includes('your-project');
-
-        if (!isSupabaseConfigured) {
-            // Use static projects when Supabase is not configured
-            setProjects(staticProjects);
-            setLoading(false);
-            return;
-        }
-
         try {
             const { data, error } = await supabase
                 .from('projects')
                 .select('*')
                 .order('created_at', { ascending: false });
-
-            if (error) throw error;
 
             if (data && data.length > 0) {
                 setProjects(data);

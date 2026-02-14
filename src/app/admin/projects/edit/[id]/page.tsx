@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { FiArrowLeft, FiPlus, FiX, FiSave } from 'react-icons/fi';
+import { FiArrowLeft, FiPlus, FiX, FiSave, FiImage, FiTrash2 } from 'react-icons/fi';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
 import { supabase } from '@/lib/supabase';
@@ -47,6 +47,7 @@ export default function EditProjectPage() {
         visibility: 'public',
         is_featured: false,
         metrics: [] as { label: string; value: string }[],
+        images: [] as { url: string; caption: string }[],
         gated_code: '',
     });
 
@@ -78,6 +79,7 @@ export default function EditProjectPage() {
                     visibility: data.visibility || 'public',
                     is_featured: data.is_featured || false,
                     metrics: data.metrics || [],
+                    images: data.images || [],
                     gated_code: data.gated_code || '',
                 });
             }
@@ -132,6 +134,53 @@ export default function EditProjectPage() {
         });
     };
 
+    const [uploading, setUploading] = useState(false);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files || e.target.files.length === 0) return;
+
+        setUploading(true);
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setFormData(prev => ({
+                    ...prev,
+                    images: [...prev.images, { url: data.url, caption: '' }]
+                }));
+            } else {
+                alert('Upload failed: ' + data.error);
+            }
+        } catch (err) {
+            console.error('Upload error:', err);
+            alert('Upload failed');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const removeImage = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateImageCaption = (index: number, caption: string) => {
+        setFormData(prev => ({
+            ...prev,
+            images: prev.images.map((img, i) => i === index ? { ...img, caption } : img)
+        }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
@@ -171,6 +220,7 @@ export default function EditProjectPage() {
                     visibility: formData.visibility,
                     is_featured: formData.is_featured,
                     metrics: formData.metrics,
+                    images: formData.images,
                     gated_code: formData.gated_code.trim() || null,
                 })
                 .eq('id', projectId);
@@ -325,6 +375,58 @@ export default function EditProjectPage() {
                             ))}
                         </div>
                     </div>
+                </div>
+
+                {/* Project Images */}
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg font-bold mb-6">Project Images</h2>
+
+                    <div className="mb-6">
+                        <label className="block font-medium mb-3">Upload Image</label>
+                        <div className="flex items-center gap-4">
+                            <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                                <FiImage />
+                                {uploading ? 'Uploading...' : 'Select Image'}
+                                <input
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    disabled={uploading}
+                                />
+                            </label>
+                            <span className="text-sm text-gray-500">Max size: 5MB</span>
+                        </div>
+                    </div>
+
+                    {formData.images.length > 0 && (
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {formData.images.map((img, idx) => (
+                                <div key={idx} className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 relative group">
+                                    <img
+                                        src={img.url}
+                                        alt={img.caption || 'Project image'}
+                                        className="w-full h-48 object-cover rounded-lg mb-3"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Image caption"
+                                        value={img.caption}
+                                        onChange={(e) => updateImageCaption(idx, e.target.value)}
+                                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-sm"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => removeImage(idx)}
+                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition shadow-lg"
+                                        title="Remove image"
+                                    >
+                                        <FiTrash2 size={16} />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Detailed Content */}

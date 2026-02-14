@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiArrowLeft, FiLock, FiUnlock, FiDownload, FiGithub, FiExternalLink, FiCheck, FiCopy } from 'react-icons/fi';
 import RequestAccessForm from '@/components/ui/RequestAccessForm';
 import Card from '@/components/ui/Card';
+import { supabase } from '@/lib/supabase';
 
 interface GatedProject {
     id: string;
@@ -98,31 +99,22 @@ export default function GatedProjectPage() {
     const fetchProject = async () => {
         // Try to fetch from Supabase first
         try {
-            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-            if (supabaseUrl && !supabaseUrl.includes('your-project')) {
-                // Fetch from Supabase
-                const { createClient } = await import('@supabase/supabase-js');
-                const supabase = createClient(
-                    supabaseUrl,
-                    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-                );
-                const { data, error } = await supabase
-                    .from('projects')
-                    .select('*')
-                    .eq('slug', slug)
-                    .eq('visibility', 'gated')
-                    .single();
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .eq('slug', slug)
+                .eq('visibility', 'gated')
+                .single();
 
-                if (data && !error) {
-                    setProject({
-                        ...data,
-                        dataset_description: data.dataset_description || 'Dataset includes curated training data with expert annotations.',
-                        reproducibility: data.reproducibility || '## Environment Setup\n```bash\npip install -r requirements.txt\n```',
-                        download_links: data.download_links || []
-                    });
-                    setLoading(false);
-                    return;
-                }
+            if (data && !error) {
+                setProject({
+                    ...data,
+                    dataset_description: data.dataset_description || 'Dataset includes curated training data with expert annotations.',
+                    reproducibility: data.reproducibility || '## Environment Setup\n```bash\npip install -r requirements.txt\n```',
+                    download_links: data.download_links || []
+                });
+                setLoading(false);
+                return;
             }
         } catch (e) {
             console.log('Could not fetch from Supabase, using fallback');

@@ -247,27 +247,21 @@ const staticProjects: Record<string, Project> = {
 };
 
 async function getProject(slug: string): Promise<Project | null> {
-    // Check if Supabase is properly configured
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-    const isSupabaseConfigured = supabaseUrl && !supabaseUrl.includes('your-project');
+    try {
+        const { data, error } = await supabase
+            .from('projects')
+            .select('*')
+            .eq('slug', slug)
+            .single();
 
-    if (isSupabaseConfigured) {
-        try {
-            const { data, error } = await supabase
-                .from('projects')
-                .select('*')
-                .eq('slug', slug)
-                .single();
-
-            if (data && !error) {
-                return data as Project;
-            }
-        } catch (error) {
-            console.error('Error fetching project from Supabase:', error);
+        if (data && !error) {
+            return data as Project;
         }
+    } catch (error) {
+        console.error('Error fetching project from Supabase:', error);
     }
 
-    // Return static project data as fallback
+    // Return static project data as fallback only if DB fails
     return staticProjects[slug] || null;
 }
 
