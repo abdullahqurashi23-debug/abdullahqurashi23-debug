@@ -32,6 +32,26 @@ export default function AboutPage() {
         { id: '3', title: 'AWS Machine Learning Specialty', issuer: 'Amazon Web Services', date_issued: '2024', credential_url: 'https://aws.amazon.com/verification/example' },
     ]);
 
+    // Profile data from admin settings
+    const [profile, setProfile] = useState({
+        name: 'Emal Kamawal',
+        title: 'AI Researcher & Developer',
+        bio: '',
+        profile_photo: '/profile.png',
+        cv_url: '/cv.pdf',
+    });
+
+    // About content from admin settings
+    const [aboutContent, setAboutContent] = useState({
+        headline: 'AI Researcher & Developer',
+        introduction: 'I am a passionate computer scientist focused on AI for healthcare and social impact. My research focuses on building explainable and privacy-preserving AI systems that can be safely deployed in clinical settings.',
+        education: [
+            { degree: 'Bachelor of Science in Computer Science', institution: 'Pak-Austria Fachhochschule (PAF-IAST)', year: '2022 - 2026' }
+        ] as { degree: string; institution: string; year: string }[],
+        skills: [] as string[],
+        interests: '',
+    });
+
     useEffect(() => {
         const fetchPortfolioData = async () => {
             try {
@@ -39,6 +59,7 @@ export default function AboutPage() {
                 if (!res.ok) return;
                 const data = await res.json();
 
+                // Update certifications
                 if (data.certifications && data.certifications.length > 0) {
                     setCertifications(data.certifications.map((c: any) => ({
                         id: c.id,
@@ -49,8 +70,30 @@ export default function AboutPage() {
                         image_url: c.image_url || '',
                     })));
                 }
+
+                // Update profile data
+                if (data.profile) {
+                    setProfile(prev => ({
+                        name: data.profile.name || prev.name,
+                        title: data.profile.title || prev.title,
+                        bio: data.profile.bio || prev.bio,
+                        profile_photo: data.profile.profile_photo || prev.profile_photo,
+                        cv_url: data.profile.cv_url || prev.cv_url,
+                    }));
+                }
+
+                // Update about content
+                if (data.about) {
+                    setAboutContent(prev => ({
+                        headline: data.about.headline || prev.headline,
+                        introduction: data.about.introduction || prev.introduction,
+                        education: (data.about.education && data.about.education.length > 0) ? data.about.education : prev.education,
+                        skills: data.about.skills || prev.skills,
+                        interests: data.about.interests || prev.interests,
+                    }));
+                }
             } catch (e) {
-                console.log('Using sample certifications');
+                console.log('Using default about data');
             }
         };
         fetchPortfolioData();
@@ -122,8 +165,8 @@ export default function AboutPage() {
                                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--brand-primary)] via-purple-500 to-cyan-500 rounded-2xl" />
                                 <div className="absolute inset-[3px] rounded-2xl overflow-hidden bg-[var(--background)]">
                                     <img
-                                        src="/profile.png"
-                                        alt="Emal Kamawal"
+                                        src={profile.profile_photo}
+                                        alt={profile.name}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
@@ -160,44 +203,42 @@ export default function AboutPage() {
                                     About Me
                                 </h1>
                                 <h2 className="text-xl md:text-2xl text-[var(--brand-primary)] font-semibold mb-6">
-                                    AI Researcher & Developer
+                                    {aboutContent.headline || profile.title}
                                 </h2>
                             </div>
 
                             <div className="space-y-4 text-[var(--text-secondary)] leading-relaxed">
                                 <p className="text-lg">
-                                    I am a passionate computer scientist focused on <strong className="text-[var(--text-primary)]">AI for healthcare and social impact</strong>.
-                                    My research focuses on building explainable and privacy-preserving AI systems that can be safely deployed in clinical settings.
+                                    {aboutContent.introduction}
                                 </p>
-                                <p>
-                                    Currently pursuing a Bachelor of Science in Computer Science at
-                                    <strong className="text-[var(--text-primary)]"> Pak-Austria Fachhochschule: Institute of Applied Sciences & Technology</strong> (Expected 2026).
-                                    I am an <span className="text-emerald-500 font-medium">Allama Iqbal Scholarship</span> recipient (HEC Pakistan).
-                                </p>
-                                <p>
-                                    My work spans Brain-Computer Interfaces (EEG), medical imaging, and computer vision,
-                                    seeking to advance AI-driven diagnostic systems that can make healthcare more accessible and accurate.
-                                </p>
+                                {profile.bio && aboutContent.introduction !== profile.bio && (
+                                    <p>{profile.bio}</p>
+                                )}
                             </div>
 
                             {/* Education Badge */}
-                            <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)]">
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center text-[var(--brand-primary)] flex-shrink-0">
-                                        🎓
-                                    </div>
-                                    <div>
-                                        <p className="font-semibold text-[var(--text-primary)]">Bachelor of Science in Computer Science</p>
-                                        <p className="text-sm text-[var(--text-secondary)]">Pak-Austria Fachhochschule (PAF-IAST) • 2022 - 2026</p>
-                                        <p className="text-sm text-emerald-500 mt-1">Honors: Allama Iqbal Scholarship Recipient</p>
-                                    </div>
+                            {aboutContent.education.length > 0 && (
+                                <div className="space-y-3">
+                                    {aboutContent.education.map((edu, index) => (
+                                        <div key={index} className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--border)]">
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-12 h-12 rounded-lg bg-[var(--brand-primary)]/10 flex items-center justify-center text-[var(--brand-primary)] flex-shrink-0">
+                                                    🎓
+                                                </div>
+                                                <div>
+                                                    <p className="font-semibold text-[var(--text-primary)]">{edu.degree}</p>
+                                                    <p className="text-sm text-[var(--text-secondary)]">{edu.institution} • {edu.year}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
+                            )}
 
                             {/* CTA Buttons */}
                             <div className="flex flex-wrap gap-4 pt-4">
                                 <a
-                                    href="/cv.pdf"
+                                    href={profile.cv_url}
                                     download
                                     className="btn btn-primary"
                                 >
