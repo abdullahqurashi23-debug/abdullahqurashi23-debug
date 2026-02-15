@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Use class-based dark mode so it syncs with ThemeProvider */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================
    PREMIUM DESIGN SYSTEM - EMAL PORTFOLIO
    Industrial Research Lab + Product Vibe
@@ -11,19 +14,19 @@
   --color-primary-dark: #1e40af;
   --color-primary-light: #60a5fa;
   --color-primary-glow: rgba(37, 99, 235, 0.4);
-  
+
   /* Accent Colors */
   --color-accent: #10b981;
   --color-accent-orange: #f59e0b;
   --color-accent-purple: #8b5cf6;
   --color-accent-cyan: #06b6d4;
-  
+
   /* Background Colors */
   --color-bg-light: #ffffff;
   --color-bg-dark: #0a0f1a;
   --color-surface-light: #f8fafc;
   --color-surface-dark: #111827;
-  
+
   /* Text Colors */
   --color-text-primary-light: #0f172a;
   --color-text-secondary-light: #475569;
@@ -43,23 +46,23 @@
   --surface-elevated: #ffffff;
   --border: #e2e8f0;
   --border-subtle: #f1f5f9;
-  
+
   /* Text */
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  
+
   /* Brand */
   --brand-primary: #2563eb;
   --brand-primary-hover: #1d4ed8;
   --brand-glow: rgba(37, 99, 235, 0.15);
-  
+
   /* Status Colors */
   --status-success: #10b981;
   --status-warning: #f59e0b;
   --status-error: #ef4444;
   --status-info: #06b6d4;
-  
+
   /* Spacing Scale */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -68,7 +71,7 @@
   --space-xl: 2rem;
   --space-2xl: 3rem;
   --space-3xl: 4rem;
-  
+
   /* Typography Scale */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -80,7 +83,7 @@
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
   --text-6xl: 3.75rem;
-  
+
   /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
@@ -88,14 +91,14 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
-  
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 20px var(--brand-glow);
-  
+
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 200ms ease;
@@ -111,36 +114,20 @@
   --surface-elevated: #1e293b;
   --border: #1e293b;
   --border-subtle: #374151;
-  
+
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  
+
   --brand-glow: rgba(37, 99, 235, 0.3);
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
-/* System Preference Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    --background: #0a0f1a;
-    --foreground: #f1f5f9;
-    --surface: #111827;
-    --surface-elevated: #1e293b;
-    --border: #1e293b;
-    --border-subtle: #374151;
-    
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    
-    --brand-glow: rgba(37, 99, 235, 0.3);
-  }
-}
+/* Dark mode is now fully class-based via .dark selector above */
 
 /* ============================================
    BASE STYLES
@@ -155,7 +142,7 @@ html {
   html {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {
@@ -383,8 +370,13 @@ body {
    ============================================ */
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInUp {
@@ -392,6 +384,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -399,9 +392,12 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px var(--brand-glow);
   }
+
   50% {
     box-shadow: 0 0 40px var(--brand-glow), 0 0 60px var(--brand-glow);
   }
@@ -455,14 +451,14 @@ body {
    ============================================ */
 
 .bg-grid {
-  background-image: 
+  background-image:
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 .bg-grid-fade {
-  background-image: 
+  background-image:
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 40px 40px;
