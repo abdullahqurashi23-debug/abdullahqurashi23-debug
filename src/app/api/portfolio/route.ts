@@ -35,15 +35,21 @@ export async function GET() {
             LIMIT 6
         `;
 
-        // Fetch certifications
-        const certifications = await sql`
-            SELECT id, title, issuer, 
-                   COALESCE(issue_date, date_issued) as date_issued,
-                   COALESCE(certificate_url, credential_url) as credential_url,
-                   image_url
-            FROM certifications 
-            ORDER BY COALESCE(issue_date, date_issued) DESC
-        `;
+        // Fetch certifications (isolated so it can't crash the rest)
+        let certifications: any[] = [];
+        try {
+            certifications = await sql`
+                SELECT id, title, issuer, 
+                       date_issued,
+                       credential_url,
+                       image_url,
+                       description
+                FROM certifications 
+                ORDER BY created_at DESC
+            `;
+        } catch (certErr: any) {
+            console.error('Certifications fetch error:', certErr?.message);
+        }
 
         return NextResponse.json({
             profile: parsed.profile || null,
