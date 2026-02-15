@@ -17,7 +17,42 @@ export const authOptions: AuthOptions = {
                     return null;
                 }
 
-                // Temporary Hardcoded Admin (Bypassing DB for Demo/Dev)
+                // Try database first (supports credential updates via admin panel)
+                try {
+                    const { data: user } = await supabase
+                        .from('admin_users')
+                        .select('*')
+                        .eq('email', credentials.email)
+                        .single();
+
+                    if (user) {
+                        // Check bcrypt-hashed password
+                        let isValidPassword = false;
+                        try {
+                            isValidPassword = await bcrypt.compare(
+                                credentials.password,
+                                user.password_hash
+                            );
+                        } catch {
+                            // If hash format is invalid, check plain-text (initial setup)
+                            isValidPassword = credentials.password === user.password_hash;
+                        }
+
+                        if (isValidPassword) {
+                            return {
+                                id: user.id,
+                                email: user.email,
+                                name: user.name || 'Admin User',
+                            };
+                        }
+                        // Password didn't match DB user
+                        return null;
+                    }
+                } catch (error) {
+                    console.error('DB Auth Error:', error);
+                }
+
+                // Fallback: Hardcoded admin for initial setup / demo only
                 if (credentials.email === 'admin@example.com' && credentials.password === 'admin') {
                     return {
                         id: 'admin-user-id',
@@ -26,32 +61,7 @@ export const authOptions: AuthOptions = {
                     };
                 }
 
-                // Fallback to Supabase check (will fail if keys are invalid)
-                try {
-                    const { data: user } = await supabase
-                        .from('admin_users')
-                        .select('*')
-                        .eq('email', credentials.email)
-                        .single();
-
-                    if (!user) return null;
-
-                    const isValidPassword = await bcrypt.compare(
-                        credentials.password,
-                        user.password_hash
-                    );
-
-                    if (!isValidPassword) return null;
-
-                    return {
-                        id: user.id,
-                        email: user.email,
-                        name: user.name,
-                    };
-                } catch (error) {
-                    console.error('Auth Error:', error);
-                    return null;
-                }
+                return null;
             },
         }),
     ],

@@ -75,8 +75,10 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
             newResolvedTheme = prefersDark ? 'dark' : 'light';
         } else {
             newResolvedTheme = theme;
-            root.classList.add(theme);
         }
+
+        // Always add the resolved theme class so CSS variables match Tailwind utilities
+        root.classList.add(newResolvedTheme);
 
         setResolvedTheme(newResolvedTheme);
         localStorage.setItem('theme', theme);
