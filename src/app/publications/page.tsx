@@ -11,7 +11,7 @@ interface Publication {
     title: string;
     authors: string[];
     journal: string;
-    status: 'under-review' | 'published' | 'preprint';
+    status: 'under-review' | 'published' | 'preprint' | 'book-chapter';
     year: number;
     abstract: string;
     contributions: string[];
@@ -28,7 +28,7 @@ export default function PublicationsPage() {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [activeFilter, setActiveFilter] = useState('All');
 
-    const filters = ['All', 'Published', 'Under Review', 'Preprint'];
+    const filters = ['All', 'Published', 'Under Review', 'Preprint', 'Book Chapter'];
 
     // Emal Kamawal's actual publications
     const staticPublications: Publication[] = [
@@ -73,7 +73,7 @@ export default function PublicationsPage() {
             title: 'Integrating Artificial Intelligence and Machine Learning in 3D Cell Culture Analysis and Prediction',
             authors: ['Muhammad Fozan', 'Muhammad Rizwan', 'Emal Kamawal', 'Muhammad Ahmad Khan', 'Dr. Shahnawaz Qureshi', 'Dr. Fazal Wahab'],
             journal: 'Book Chapter',
-            status: 'published',
+            status: 'book-chapter',
             year: 2026,
             abstract: 'A comprehensive chapter on applying AI/ML to 3D cell culture workflows, covering imaging-based segmentation, predictive modeling, biomarker discovery, and drug screening.',
             contributions: [
@@ -91,7 +91,7 @@ export default function PublicationsPage() {
             title: 'Advanced Imaging and Analysis Techniques for 3D Cell Cultures and Organoids',
             authors: ['Emal Kamawal', 'Hazrat Nabi', 'Muhammad Fozan', 'Arbab Waheed Ahmad', 'Habab Ali Ahmad'],
             journal: 'Advances in Drug Development: From Biosignaling to Precision Medicine, CRC Press',
-            status: 'published',
+            status: 'book-chapter',
             year: 2026,
             abstract: 'Chapter 4 focusing on advanced imaging and computational analysis for 3D cell cultures and organoids, covering end-to-end workflows including microscopy data preparation, segmentation and quantification techniques.',
             contributions: [
@@ -134,19 +134,38 @@ export default function PublicationsPage() {
         if (activeFilter === 'Published') return pub.status === 'published';
         if (activeFilter === 'Under Review') return pub.status === 'under-review';
         if (activeFilter === 'Preprint') return pub.status === 'preprint';
+        if (activeFilter === 'Book Chapter') return pub.status === 'book-chapter';
         return true;
     });
 
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'under-review':
-                return <span className="badge badge-warning">Under Review</span>;
+                return (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                        Under Review
+                    </span>
+                );
             case 'published':
-                return <span className="badge badge-success">Published</span>;
+                return (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                        Published
+                    </span>
+                );
             case 'preprint':
-                return <span className="badge badge-primary">Preprint</span>;
+                return (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                        Preprint
+                    </span>
+                );
+            case 'book-chapter':
+                return (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400">
+                        Book Chapter
+                    </span>
+                );
             default:
-                return <span className="badge">Book Chapter</span>;
+                return null;
         }
     };
 

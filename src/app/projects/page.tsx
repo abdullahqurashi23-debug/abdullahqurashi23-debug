@@ -35,6 +35,9 @@ export default function ProjectsPage() {
         { key: 'Cybersecurity', label: 'Cybersecurity' },
         { key: 'Privacy', label: 'Privacy' },
         { key: 'IoT', label: 'IoT' },
+        { key: 'Medical Imaging', label: 'Medical Imaging' },
+        { key: 'Deep Learning', label: 'Deep Learning' },
+        { key: 'Machine Learning', label: 'Machine Learning' },
     ];
 
     // Emal Kamawal's actual projects

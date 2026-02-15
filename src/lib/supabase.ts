@@ -5,7 +5,8 @@ const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL!);
 // Helper: execute raw parameterized query via Neon
 async function rawQuery(query: string, params: any[] = []): Promise<any[]> {
     // Neon's sql function accepts (queryString, paramsArray) at runtime
-    const result = await (sql as any)(query, params);
+    // We must use .query() for plain string queries with placeholders
+    const result = await (sql as any).query(query, params);
     return Array.isArray(result) ? result : [];
 }
 
