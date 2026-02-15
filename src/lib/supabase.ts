@@ -4,9 +4,9 @@ const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL!);
 
 // Helper: execute raw parameterized query via Neon
 async function rawQuery(query: string, params: any[] = []): Promise<any[]> {
-    // Use sql.query() for conventional parameterized calls
-    const result = await (sql as any).query(query, params);
-    return result;
+    // Neon's sql function accepts (queryString, paramsArray) at runtime
+    const result = await (sql as any)(query, params);
+    return Array.isArray(result) ? result : [];
 }
 
 // Supabase-compatible query builder for Neon
